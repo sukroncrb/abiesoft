@@ -1,0 +1,103 @@
+<?php 
+
+namespace Sukroncrb2025\Abiesoft\Sistem\Http;
+
+use Sukroncrb2025\Abiesoft\Middleware\Middleware;
+use Sukroncrb2025\Abiesoft\Sistem\Utilities\Reader;
+
+class Route {
+
+    use Request;
+
+    private $route = [];
+
+    public function __construct()
+    {
+        $dataroute = Reader::yaml("routes");
+        foreach($dataroute as $r){
+            foreach($r['path'] as $k => $v) {
+                $mt = $v['method'];
+                $ctr = $v['controller'];
+                $fc = $v['function'];
+                $this->$mt($k, [$ctr,$fc]);
+            }
+        }
+    }
+
+    protected function get(string $path, string|array $callback)
+    {
+        $this->route['get'][$path] = $callback;
+    }
+
+    protected function post(string $path, string|array $callback)
+    {
+        $this->route['post'][$path] = $callback;
+    }
+    
+    protected function patch(string $path, string|array $callback)
+    {
+        $this->route['patch'][$path] = $callback;
+    }
+
+    protected function delete(string $path, string|array $callback)
+    {
+        $this->route['delete'][$path] = $callback;
+    }
+
+    public function getRouteList():array {
+        new Route();
+        return $this->route;
+    }
+    
+    public function current() {
+        $method = $this->method();
+        $path = $this->path();
+        $params = $this->params();
+        $middleware = Middleware::url($path, 'user');
+        $callback = $this->route[$method][$path];
+
+        if(!$callback){
+            return $this->notfound();
+        }
+
+        if(!$middleware) {
+            return $this->forbidden();
+        }
+
+        if(is_array($callback)){
+            $file = __DIR__."/../../../controllers/".$callback[0].".php";
+            if(file_exists($file)){
+                $controller = "\App\Controller\\".$callback[0];
+                $ctrl = new $controller;
+                $fc = $callback[1];
+                return $ctrl->$fc($params);
+            }else{
+                $this->notfound();
+            }
+        }
+        
+        if(is_string($callback)){
+            die($callback);
+        }
+    }
+
+
+    protected function notfound() {
+        if(Reader::env('MODE') == "develope"){
+            die("Not Found");
+        }else{
+            Lanjut::ke("/");
+            die();
+        }
+    }
+
+    protected function forbidden() {
+        if(Reader::env('MODE') == "develope"){
+            die("Forbidden");
+        }else{
+            Lanjut::ke("/");
+            
+        }
+    }
+
+}

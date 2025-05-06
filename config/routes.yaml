@@ -1,0 +1,36 @@
+home: 
+  path: 
+    "/": 
+      method: "get"
+      controller: "HomeController"
+      function: "index"
+
+users: 
+  path: 
+    "/users": 
+      method: "get"
+      controller: "UsersController"
+      function: "index"
+      midleware: "admin"
+    "/users/add":
+      method: "get"
+      controller: "UsersController"
+      function: "add"
+      midleware: "admin"
+    "/users/edit/:params":
+      method: "get"
+      controller: "UsersController"
+      function: "edit"
+      midleware: "admin,user"
+    "/users/info/:params":
+      method: "get"
+      controller: "UsersController"
+      function: "info"
+      midleware: "admin"
+grup:
+  path:
+    "/grup":
+      method: "get"
+      controller: "GrupController"
+      function: "index"
+      midleware: "admin"

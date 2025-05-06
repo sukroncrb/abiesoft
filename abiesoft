@@ -1,0 +1,23 @@
+<?php 
+
+date_default_timezone_set("Asia/Bangkok");
+
+require_once __DIR__."/vendor/autoload.php";
+
+use Sukroncrb2025\Abiesoft\Sistem\Console\Terminal;
+
+$terminal = new Terminal;
+
+if(isset($argv[1])){
+    if(isset($argv[2])){
+        if(isset($argv[3])){
+            $terminal->command($argv[1], $argv[2], $argv[3]);
+        }else{
+            $terminal->command($argv[1], $argv[2]);
+        }
+    }else{
+        $terminal->command($argv[1]);
+    }
+}else{
+    $terminal->command('help');
+}

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta property="og:url" content="{$app['url']}"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:title" content="{$app['title']}"/>
+    <meta property="og:description" content="{$app['description']}"/>
+    <meta property="og:image" content="{$app['cover']}"/>
+    <meta name="description" content="{$app['description']}">
+
+    <meta name="robots" content="index, follow" />
+    <meta name="googlebot" content="index, follow" />
+    <meta name="googlebot-news" content="index, follow" />
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="{$baseurl}assets/admin/css/style.css" />
+    {block css}{/block}
+    <title>{block title}{/block}</title>
+
+</head>
+
+<body>
+
+    <!-- End Google Tag Manager (noscript) -->
+    <div itemprop="blog Post" itemscope="itemscope" itemtype="http://schema.org/BlogPosting">
+        <div itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject">
+            <meta content="{$app['cover']}" itemprop="{$app['url']}"/>
+        </div>
+    </div>
+
+    {include './components/header.latte'}
+
+    {block content}{/block}
+
+    <script src="{$baseurl}assets/admin/js/style.js"></script>
+    {block js}{/block}
+
+</body>
+
+</html>

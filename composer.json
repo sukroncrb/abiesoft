@@ -1,0 +1,19 @@
+{
+    "name": "sukroncrb2025/abiesoft",
+    "autoload": {
+        "psr-4": {
+            "Sukroncrb2025\\Abiesoft\\": "src/",
+            "App\\Controller\\": "controllers/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Sukron",
+            "email": "sukroncrb2025@gmail.com"
+        }
+    ],
+    "require": {
+        "symfony/yaml": "^7.2",
+        "latte/latte": "^3.0"
+    }
+}
