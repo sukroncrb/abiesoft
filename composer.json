@@ -3,7 +3,8 @@
     "autoload": {
         "psr-4": {
             "Sukroncrb2025\\Abiesoft\\": "src/",
-            "App\\Controller\\": "controllers/"
+            "App\\Controller\\": "controllers/",
+            "App\\Schema\\": "schema/"
         }
     },
     "authors": [
@@ -14,6 +15,7 @@
     ],
     "require": {
         "symfony/yaml": "^7.2",
-        "latte/latte": "^3.0"
+        "latte/latte": "^3.0",
+        "ramsey/uuid": "^4.7"
     }
 }

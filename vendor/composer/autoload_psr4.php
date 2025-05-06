@@ -9,5 +9,9 @@ return array(
     'Symfony\\Polyfill\\Ctype\\' => array($vendorDir . '/symfony/polyfill-ctype'),
     'Symfony\\Component\\Yaml\\' => array($vendorDir . '/symfony/yaml'),
     'Sukroncrb2025\\Abiesoft\\' => array($baseDir . '/src'),
+    'Ramsey\\Uuid\\' => array($vendorDir . '/ramsey/uuid/src'),
+    'Ramsey\\Collection\\' => array($vendorDir . '/ramsey/collection/src'),
+    'Brick\\Math\\' => array($vendorDir . '/brick/math/src'),
+    'App\\Schema\\' => array($baseDir . '/schema'),
     'App\\Controller\\' => array($baseDir . '/controllers'),
 );

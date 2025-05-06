@@ -45,14 +45,13 @@ final class Template_bb9ccfb92b extends Latte\Runtime\Template
     <meta name="googlebot" content="index, follow" />
     <meta name="googlebot-news" content="index, follow" />
 
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="';
-		echo LR\Filters::escapeHtmlAttr(LR\Filters::safeUrl($baseurl)) /* line 20 */;
-		echo 'assets/admin/css/style.css" />
+		echo LR\Filters::escapeHtmlAttr(LR\Filters::safeUrl($baseurl)) /* line 19 */;
+		echo '/assets/admin/css/style.css" />
 ';
-		$this->renderBlock('css', get_defined_vars()) /* line 21 */;
+		$this->renderBlock('css', get_defined_vars()) /* line 20 */;
 		echo '    <title>';
-		$this->renderBlock('title', get_defined_vars()) /* line 22 */;
+		$this->renderBlock('title', get_defined_vars()) /* line 21 */;
 		echo '</title>
 
 </head>
@@ -63,23 +62,23 @@ final class Template_bb9ccfb92b extends Latte\Runtime\Template
     <div itemprop="blog Post" itemscope="itemscope" itemtype="http://schema.org/BlogPosting">
         <div itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject">
             <meta content="';
-		echo LR\Filters::escapeHtmlAttr($app['cover']) /* line 31 */;
+		echo LR\Filters::escapeHtmlAttr($app['cover']) /* line 30 */;
 		echo '" itemprop="';
-		echo LR\Filters::escapeHtmlAttr($app['url']) /* line 31 */;
+		echo LR\Filters::escapeHtmlAttr($app['url']) /* line 30 */;
 		echo '"/>
         </div>
     </div>
 
 ';
-		$this->createTemplate('./components/header.latte', $this->params, 'include')->renderToContentType('html') /* line 35 */;
+		$this->createTemplate('./components/header.latte', $this->params, 'include')->renderToContentType('html') /* line 34 */;
 		echo "\n";
-		$this->renderBlock('content', get_defined_vars()) /* line 37 */;
+		$this->renderBlock('content', get_defined_vars()) /* line 36 */;
 		echo '
     <script src="';
-		echo LR\Filters::escapeHtmlAttr(LR\Filters::safeUrl($baseurl)) /* line 39 */;
-		echo 'assets/admin/js/style.js"></script>
+		echo LR\Filters::escapeHtmlAttr(LR\Filters::safeUrl($baseurl)) /* line 38 */;
+		echo '/assets/admin/js/style.js"></script>
 ';
-		$this->renderBlock('js', get_defined_vars()) /* line 40 */;
+		$this->renderBlock('js', get_defined_vars()) /* line 39 */;
 		echo '
 </body>
 
@@ -87,25 +86,25 @@ final class Template_bb9ccfb92b extends Latte\Runtime\Template
 	}
 
 
-	/** {block css} on line 21 */
+	/** {block css} on line 20 */
 	public function blockCss(array $ʟ_args): void
 	{
 	}
 
 
-	/** {block title} on line 22 */
+	/** {block title} on line 21 */
 	public function blockTitle(array $ʟ_args): void
 	{
 	}
 
 
-	/** {block content} on line 37 */
+	/** {block content} on line 36 */
 	public function blockContent(array $ʟ_args): void
 	{
 	}
 
 
-	/** {block js} on line 40 */
+	/** {block js} on line 39 */
 	public function blockJs(array $ʟ_args): void
 	{
 	}

@@ -9,6 +9,7 @@ class ComposerStaticInitcc8f297ff958eb97d85b1c60d9a2e6c1
     public static $files = array (
         '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
         '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
+        'e39a8b23c42d4e1452234d762b03835a' => __DIR__ . '/..' . '/ramsey/uuid/src/functions.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -18,8 +19,18 @@ class ComposerStaticInitcc8f297ff958eb97d85b1c60d9a2e6c1
             'Symfony\\Component\\Yaml\\' => 23,
             'Sukroncrb2025\\Abiesoft\\' => 23,
         ),
+        'R' => 
+        array (
+            'Ramsey\\Uuid\\' => 12,
+            'Ramsey\\Collection\\' => 18,
+        ),
+        'B' => 
+        array (
+            'Brick\\Math\\' => 11,
+        ),
         'A' => 
         array (
+            'App\\Schema\\' => 11,
             'App\\Controller\\' => 15,
         ),
     );
@@ -36,6 +47,22 @@ class ComposerStaticInitcc8f297ff958eb97d85b1c60d9a2e6c1
         'Sukroncrb2025\\Abiesoft\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src',
+        ),
+        'Ramsey\\Uuid\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/ramsey/uuid/src',
+        ),
+        'Ramsey\\Collection\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/ramsey/collection/src',
+        ),
+        'Brick\\Math\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/brick/math/src',
+        ),
+        'App\\Schema\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/schema',
         ),
         'App\\Controller\\' => 
         array (

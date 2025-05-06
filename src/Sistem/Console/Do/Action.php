@@ -1,6 +1,6 @@
 <?php 
 
-namespace Sukroncrb2025\Abiesoft\Sistem\Console\do;
+namespace Sukroncrb2025\Abiesoft\Sistem\Console\Do;
 
 use Sukroncrb2025\Abiesoft\Sistem\Utilities\Reader;
 
