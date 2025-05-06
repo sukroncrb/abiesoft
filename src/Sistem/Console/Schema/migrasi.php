@@ -1,21 +1,17 @@
 <?php 
 
-namespace App\Schema;
+namespace Sukroncrb2025\Abiesoft\Sistem\Console\Schema;
 
 use Sukroncrb2025\Abiesoft\Sistem\Mysql\DB;
 use Sukroncrb2025\Abiesoft\Sistem\Mysql\Schema;
-class test extends Schema 
-{
 
+class migrasi extends Schema
+{
     public function buattabel()
     {
         $schema = new Schema;
-        /*
-            contoh membuat kolom nama VARCHAR
-            dengan panjang karakter 50
-            $schema->teks(nama: 'nama', panjang: 50);
-        */
-        $sql = $schema->create('test');
+        $schema->teks(nama: 'tabel');
+        $sql = $schema->create('migrasi');
         DB::terhubung()->query($sql);
         $this->buatdata();
     }
@@ -23,11 +19,11 @@ class test extends Schema
     public function buatdata()
     {
         /*
-            DB::terhubung()->input('test', [
+            DB::terhubung()->input('migrasi', [
                 'nama' => '',
             ]);
         */
     }
 }
-$create = new test();
+$create = new migrasi();
 $create->buattabel();
