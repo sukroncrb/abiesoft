@@ -53,8 +53,29 @@ class Route {
         $method = $this->method();
         $path = $this->path();
         $params = $this->params();
-        $middleware = Middleware::url($path, 'user');
+        $routemodel = $this->routeModel();
+        $middleware = Middleware::url($path, 'admin');
         $callback = $this->route[$method][$path];
+
+        $data = [
+            'callback' => $callback,
+            'params' => $params,
+            'middleware' => $middleware
+        ];
+
+        return match($routemodel){
+            'backend' => $this->backend($data),
+            'frontend' => $this->frontend($data),
+            default => $this->api($data)
+        };
+
+    }
+
+    protected function backend($data) {
+
+        $callback = $data['callback'];
+        $middleware = $data['middleware'];
+        $params = $data['params'];
 
         if(!$callback){
             return $this->notfound();
@@ -65,9 +86,9 @@ class Route {
         }
 
         if(is_array($callback)){
-            $file = __DIR__."/../../../controllers/".$callback[0].".php";
+            $file = __DIR__."/../../../controllers/Backend/".$callback[0].".php";
             if(file_exists($file)){
-                $controller = "\App\Controller\\".$callback[0];
+                $controller = "\App\Controller\Backend\\".$callback[0];
                 $ctrl = new $controller;
                 $fc = $callback[1];
                 return $ctrl->$fc($params);
@@ -79,6 +100,43 @@ class Route {
         if(is_string($callback)){
             die($callback);
         }
+
+    }
+
+    protected function frontend($data) {
+
+        $callback = $data['callback'];
+        $middleware = $data['middleware'];
+        $params = $data['params'];
+
+        if(!$callback){
+            return $this->notfound();
+        }
+
+        if(!$middleware) {
+            return $this->forbidden();
+        }
+
+        if(is_array($callback)){
+            $file = __DIR__."/../../../controllers/Frontend/".$callback[0].".php";
+            if(file_exists($file)){
+                $controller = "\App\Controller\Frontend\\".$callback[0];
+                $ctrl = new $controller;
+                $fc = $callback[1];
+                return $ctrl->$fc($params);
+            }else{
+                $this->notfound();
+            }
+        }
+        
+        if(is_string($callback)){
+            die($callback);
+        }
+
+    }
+
+    protected function api($data) {
+        //
     }
 
 

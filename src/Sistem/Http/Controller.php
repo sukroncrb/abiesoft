@@ -8,7 +8,7 @@ use Sukroncrb2025\Abiesoft\Sistem\Utilities\Reader;
 
 class Controller {
 
-    public function view (string $model = 'web', string $template = "", array $data = []) {
+    public function view (string $model = 'frontend', string $template = "", array $data = []) {
         
         $finaldata = [];
 
@@ -60,8 +60,8 @@ class Controller {
         $latte->setTempDirectory($dir . "temp");
         
         return match($model) {
-            'admin' => $latte->render($dir . "templates/admin/".$template.".latte", $finaldata),
-            default => $latte->render($dir . "templates/web/".$template.".latte", $finaldata)
+            'backend' => $latte->render($dir . "templates/admin/".$template.".latte", $finaldata),
+            default => $latte->render($dir . "templates/website/".$template.".latte", $finaldata)
         };
         
     }

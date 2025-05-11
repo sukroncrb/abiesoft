@@ -9,6 +9,7 @@ class Middleware {
     protected static function whiteListDefault () {
         return [
             '/',
+            '/test'
         ];
     }
 
@@ -17,7 +18,7 @@ class Middleware {
         $dataroute = Reader::yaml("routes");
         foreach($dataroute as $r){
             foreach($r['path'] as $k => $v) {
-                if(in_array($grup,explode(",",$v['midleware']))){
+                if(in_array($grup,explode(",",$v['middleware']))){
                     array_push($data[$grup], $k);
                 }
             }

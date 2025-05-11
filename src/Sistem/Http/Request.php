@@ -2,10 +2,26 @@
 
 namespace Sukroncrb2025\Abiesoft\Sistem\Http;
 
+use Sukroncrb2025\Abiesoft\Sistem\Utilities\Config;
+use Sukroncrb2025\Abiesoft\Sistem\Utilities\Reader;
+
 trait Request {
 
     public function method ():string {
         return strtolower($_SERVER['REQUEST_METHOD']);
+    }
+
+    public function routeModel () {
+        $model = "frontend";
+        $uri = filter_var($_SERVER['REQUEST_URI'],FILTER_SANITIZE_URL);
+        if(explode("/", $uri)[1] == Reader::env('PREFIX_ADMIN')){
+            $model = "backend";
+        }else if(explode("/", $uri)[1] == "api"){
+            $model = "api";
+        }else{
+            $model = "frontend";
+        }
+        return $model;
     }
 
     public function path () {

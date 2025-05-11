@@ -1,36 +1,41 @@
-home: 
+# Middleware merupakan namagrup
+# jika disertakan middleware dengan nama grup admin
+# maka data tersebut hanya bisa diakses oleh admin
+# tapi jika ingin lebih dari satu grup yang dapat mengakses
+# anda bisa menambahkan koma (,) misal admin,user
+# maka route tersebut bisa diakses oleh grup admin dan user
+
+
+
+# Route Admin
+website: 
   path: 
     "/": 
-      method: "get"
-      controller: "HomeController"
-      function: "index"
+      method: get
+      controller: HomeController
+      function: index
 
-# users: 
-#   path: 
-#     "/users": 
-#       method: "get"
-#       controller: "UsersController"
-#       function: "index"
-#       midleware: "admin"
-#     "/users/add":
-#       method: "get"
-#       controller: "UsersController"
-#       function: "add"
-#       midleware: "admin"
-#     "/users/edit/:params":
-#       method: "get"
-#       controller: "UsersController"
-#       function: "edit"
-#       midleware: "admin,user"
-#     "/users/info/:params":
-#       method: "get"
-#       controller: "UsersController"
-#       function: "info"
-#       midleware: "admin"
-# grup:
-#   path:
-#     "/grup":
-#       method: "get"
-#       controller: "GrupController"
-#       function: "index"
-#       midleware: "admin"
+    
+
+# Route Admin
+admin:
+  path:
+    "/admin": 
+      method: get
+      controller: HomeController
+      function: index
+
+
+
+# Route Tester
+test: 
+  path: 
+    "/test": 
+      method: get
+      controller: TestController
+      function: index
+    "/test/do/:params": 
+      method: get
+      controller: TestController
+      function: index
+      middleware: admin,user
