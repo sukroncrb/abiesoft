@@ -16,6 +16,7 @@ class users extends Schema
         $schema->teks("psw");
         $schema->teks("salt");
         $schema->paragrap("photo");
+        $schema->enum(nama:"jeniskelamin", data:['Laki-laki', 'Perempuan']);
         $schema->teks("grupid");
         $sql = $schema->create('users');
         DB::terhubung()->query($sql);
@@ -32,7 +33,8 @@ class users extends Schema
             'email' => 'sukroncrb2025@gmail.com',
             'psw' => $password,
             'salt' => $salt,
-            'photo' => 'assets/storage/default/pp.png',
+            'photo' => 'assets/storage/default/pp_lk.png',
+            'jeniskelamin' => 'Laki-laki',
             'grupid' => 'eb92460e-237c-44b6-8581-35dd33828949',
         ]);
         

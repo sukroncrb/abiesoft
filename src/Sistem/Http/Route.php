@@ -54,7 +54,10 @@ class Route {
         $path = $this->path();
         $params = $this->params();
         $routemodel = $this->routeModel();
-        $middleware = Middleware::url($path, 'admin');
+        $middleware = true;
+        if($routemodel == "backend"){
+            $middleware = Middleware::url($path, 'admin');
+        }
         $callback = $this->route[$method][$path];
 
         $data = [

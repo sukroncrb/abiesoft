@@ -5,22 +5,23 @@
 # anda bisa menambahkan koma (,) misal admin,user
 # maka route tersebut bisa diakses oleh grup admin dan user
 
-
-
-# Route Admin
-website: 
-  path: 
-    "/": 
-      method: get
-      controller: HomeController
-      function: index
-
     
 
 # Route Admin
 admin:
   path:
     "/admin": 
+      method: get
+      controller: HomeController
+      function: index
+      middleware: admin,user
+
+
+
+# Route Website
+website: 
+  path: 
+    "/": 
       method: get
       controller: HomeController
       function: index
@@ -38,4 +39,3 @@ test:
       method: get
       controller: TestController
       function: index
-      middleware: admin,user
