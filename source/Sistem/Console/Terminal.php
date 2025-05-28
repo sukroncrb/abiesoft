@@ -2,6 +2,7 @@
 
 namespace Sukroncrb2025\Abiesoft\Sistem\Console;
 
+use Sukroncrb2025\Abiesoft\Sistem\Console\Controller\DeleteController;
 use Sukroncrb2025\Abiesoft\Sistem\Console\Controller\MakeController;
 use Sukroncrb2025\Abiesoft\Sistem\Console\Database\Backup;
 use Sukroncrb2025\Abiesoft\Sistem\Console\Database\Import;
@@ -19,6 +20,7 @@ class Terminal {
         MakeSchema, 
         DeleteSchema, 
         MakeController,
+        DeleteController,
         Import, 
         Refresh, 
         Backup, 
@@ -35,7 +37,7 @@ class Terminal {
         return match($action){
             "start" => $this->start(),
             "make" => $this->make($model, $value, $opsi),
-            "delete" => $this->delete($model, $value),
+            "delete" => $this->delete($model, $value, $opsi),
             "database" => $this->database($value),
             default => $this->help()
         };
@@ -49,9 +51,10 @@ class Terminal {
         };
     }
 
-    protected function delete(string $model, string $value) {
+    protected function delete(string $model, string $value, $opsi = "") {
         return match($model){
             'schema' =>$this->deleteSchema($value),
+            'controller' =>$this->deleteController($value, $opsi),
             default => $this->help()
         };
     }
