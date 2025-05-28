@@ -3,7 +3,7 @@
         'name' => 'sukroncrb2025/abiesoft',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '6e6fd4532dda67822285cf6601820ebd94c1d7e7',
+        'reference' => '06360d4066bd67414e54fa563925073fa318f279',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -55,7 +55,7 @@
         'sukroncrb2025/abiesoft' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '6e6fd4532dda67822285cf6601820ebd94c1d7e7',
+            'reference' => '06360d4066bd67414e54fa563925073fa318f279',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

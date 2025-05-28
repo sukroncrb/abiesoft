@@ -2,6 +2,7 @@
 
 namespace Sukroncrb2025\Abiesoft\Sistem\Console;
 
+use Sukroncrb2025\Abiesoft\Sistem\Console\Controller\MakeController;
 use Sukroncrb2025\Abiesoft\Sistem\Console\Database\Backup;
 use Sukroncrb2025\Abiesoft\Sistem\Console\Database\Import;
 use Sukroncrb2025\Abiesoft\Sistem\Console\Database\Refresh;
@@ -12,7 +13,16 @@ use Sukroncrb2025\Abiesoft\Sistem\Console\Schema\MakeSchema;
 
 class Terminal {
 
-    use Opsi, Action, MakeSchema, DeleteSchema, Import, Refresh, Backup, Restore;
+    use 
+        Opsi, 
+        Action, 
+        MakeSchema, 
+        DeleteSchema, 
+        MakeController,
+        Import, 
+        Refresh, 
+        Backup, 
+        Restore;
 
     public function command(String $action = "", String $value = "", String $opsi = "") {
         $model = "";
@@ -24,16 +34,17 @@ class Terminal {
 
         return match($action){
             "start" => $this->start(),
-            "make" => $this->make($model, $value),
+            "make" => $this->make($model, $value, $opsi),
             "delete" => $this->delete($model, $value),
             "database" => $this->database($value),
             default => $this->help()
         };
     }
 
-    protected function make(string $model, string $value) {
+    protected function make(string $model, string $value, $opsi = "") {
         return match($model){
             'schema' =>$this->buatSchema($value),
+            'controller' => $this->buatController($value, $opsi),
             default => $this->help()
         };
     }

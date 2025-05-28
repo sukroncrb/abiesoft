@@ -46,7 +46,7 @@ class ComposerStaticInitcc8f297ff958eb97d85b1c60d9a2e6c1
         ),
         'Sukroncrb2025\\Abiesoft\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/src',
+            0 => __DIR__ . '/../..' . '/source',
         ),
         'Ramsey\\Uuid\\' => 
         array (

@@ -56,6 +56,7 @@ class Controller {
         }
 
         $dir = __DIR__ . "/../../../";
+
         $latte = new Engine();
         $latte->setTempDirectory($dir . "temp");
         

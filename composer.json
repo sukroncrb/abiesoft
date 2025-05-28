@@ -2,7 +2,7 @@
     "name": "sukroncrb2025/abiesoft",
     "autoload": {
         "psr-4": {
-            "Sukroncrb2025\\Abiesoft\\": "src/",
+            "Sukroncrb2025\\Abiesoft\\": "source/",
             "App\\Controller\\": "controllers/",
             "App\\Schema\\": "schema/"
         }

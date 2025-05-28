@@ -10,7 +10,7 @@
 # Route Admin
 admin:
   path:
-    "/admin": 
+    /admin: 
       method: get
       controller: HomeController
       function: index
@@ -21,7 +21,7 @@ admin:
 # Route Website
 website: 
   path: 
-    "/": 
+    /: 
       method: get
       controller: HomeController
       function: index
@@ -31,11 +31,11 @@ website:
 # Route Tester
 test: 
   path: 
-    "/test": 
+    /test: 
       method: get
       controller: TestController
       function: index
-    "/test/do/:params": 
+    /test/do/:params: 
       method: get
       controller: TestController
       function: index
