@@ -77,8 +77,13 @@ class Terminal {
         echo "   database import \n";
         echo "   database refresh ".$this->ColoringTextOnly('// Mereset database menjadi kosong lagi seperti awal di import', 'abuabu')."\n";
         echo "   database backup \n";
-        echo "   database restore \n";
-        echo "\n\n";
+        echo "   database restore \n\n";
+        echo $this->ColoringTextOnly('Controller', 'biru')."\n";
+        echo "   make:controller NamaController ".$this->ColoringTextOnly('// Backend', 'abuabu')."\n";
+        echo "   make:controller NamaController --f ".$this->ColoringTextOnly('// Frontend', 'abuabu')."\n";
+        echo "   delete:controller NamaController \n";
+        echo "   delete:controller NamaController --f\n\n";
+        echo "\n";
     }
 
 }

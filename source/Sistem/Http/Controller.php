@@ -62,7 +62,8 @@ class Controller {
         
         return match($model) {
             'backend' => $latte->render($dir . "templates/admin/".$template.".latte", $finaldata),
-            default => $latte->render($dir . "templates/website/".$template.".latte", $finaldata)
+            'frontend' => $latte->render($dir . "templates/website/".$template.".latte", $finaldata),
+            default => $latte->render($dir . "templates/test/".$template.".latte", $finaldata)
         };
         
     }

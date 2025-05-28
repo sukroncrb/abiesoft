@@ -5,6 +5,8 @@ namespace Sukroncrb2025\Abiesoft\Sistem\Console\Controller;
 trait MakeController {
 
     public function buatController($nama, $opsi = "") {
+
+        $nama = ucFirst(str_replace("controller","",strtolower($nama))."Controller");
         
         if(!$this->folderControllerCheck()){
             die($this->folderControllerCheck());
@@ -20,13 +22,13 @@ trait MakeController {
             die($this->fileControllerExistCheck($dir, $nama));
         }
 
-        $this->releaseFileController($dir, $nama);
+        $this->releaseFileController($dir, $nama, $opsi);
 
     }
 
     protected function folderControllerCheck() {
         $dir = __DIR__."/../../../../controller";
-        if(!Controller($dir)) {
+        if(!file_exists($dir)) {
             mkdir($dir,0777, true);
             return true;
         }
@@ -34,7 +36,6 @@ trait MakeController {
     }
 
     protected function fileControllerExistCheck($dir, $nama) {
-        $nama = strtolower($nama);
         if(file_exists($dir.$nama.".php")) {
             echo "\n";
             echo $this->ColoringWithBox('Hati-hati!','merah');
@@ -58,75 +59,65 @@ trait MakeController {
         return true;
     }
 
-    protected function releaseFileController($dir, $nama) {
+    protected function releaseFileController($dir, $nama, $opsi) {
+
         $file = fopen($dir . "/" . $nama . ".php", 'w') or die("Tidak Dapat Membuka File");
         $isi = "<?php \n\n";
         fwrite($file, $isi);
-        $isi = "namespace App\Controller;\n\n";
+        $model = "";
+        if($opsi != ""){
+            $isi = "namespace App\Controller\Frontend;\n\n";
+            $model = "frontend";
+        }else{
+            $isi = "namespace App\Controller\Backend;\n\n";
+            $model = "backend";
+        }
         fwrite($file, $isi);
-        $isi = "use Sukroncrb2025\Abiesoft\Sistem\Mysql\DB;\n";
+        $isi = "use Sukroncrb2025\Abiesoft\Sistem\Http\Controller;\n\n";
         fwrite($file, $isi);
-        fwrite($file, $isi);
-        $isi = "class " . $nama . " extends Controller \n";
+        $isi = "class ".$nama." extends Controller \n";
         fwrite($file, $isi);
         $isi = "{\n\n";
         fwrite($file, $isi);
 
-        $isi = "    public function buattabel()\n";
+        $isi = "    public function index()\n";
         fwrite($file, $isi);
         $isi = "    {\n";
         fwrite($file, $isi);
-        $isi = "        $" . "" . "controller = new Controller;\n";
-        fwrite($file, $isi);
         $isi = "        /*\n";
         fwrite($file, $isi);
-        $isi = "            contoh membuat kolom nama VARCHAR\n";
+        $isi = "        $" . "" . "this->view(\n";
         fwrite($file, $isi);
-        $isi = "            dengan panjang karakter 50\n";
+        $isi = "            model:'".$model."',\n";
         fwrite($file, $isi);
-        $isi = "            $" . "" . "ontroller->teks(nama: 'nama', panjang: 50);\n";
+        $isi = "            template:'home/index',\n";
+        fwrite($file, $isi);
+        $isi = "            data: [\n";
+        fwrite($file, $isi);
+        $isi = "                'title' => 'Selamat datang'\n";
+        fwrite($file, $isi);
+        $isi = "            ]\n";
+        fwrite($file, $isi);
+        $isi = "        );\n";
         fwrite($file, $isi);
         $isi = "        */\n";
-        fwrite($file, $isi);
-        $isi = "        $" . "" . "sql = $" . "" . "controller->create('" . $nama . "');\n";
-        fwrite($file, $isi);
-        $isi = "        DB::terhubung()->query($" . "" . "sql);\n";
-        fwrite($file, $isi);
-        $isi = "        $" . "" . "this->buatdata();\n";
         fwrite($file, $isi);
         $isi = "    }\n\n";
         fwrite($file, $isi);
-
-        $isi = "    public function buatdata()\n";
-        fwrite($file, $isi);
-        $isi = "    {\n";
-        fwrite($file, $isi);
-        $isi = "        /*\n";
-        fwrite($file, $isi);
-        $isi = "            DB::terhubung()->input('" . $nama . "', [\n";
-        fwrite($file, $isi);
-        $isi = "                'nama' => '',\n";
-        fwrite($file, $isi);
-        $isi = "            ]);\n";
-        fwrite($file, $isi);
-        $isi = "        */\n";
-        fwrite($file, $isi);
-        $isi = "    }\n";
+        $isi = "}\n\n";
         fwrite($file, $isi);
 
-        $isi = "}\n";
-        fwrite($file, $isi);
-
-        $isi = "$" . "" . "create = new " . $nama . "();\n";
-        fwrite($file, $isi);
-        $isi = "$" . "" . "create->buattabel();\n";
-        fwrite($file, $isi);
+        
 
         fclose($file);
         echo "\n";
         echo $this->ColoringWithBox('Sukses!','hijau');
         echo "\n";
-        echo $this->ColoringTextOnly('Lokasi Controller','biru').": controller/" . $nama . ".php";
+        if($opsi != ""){
+            echo $this->ColoringTextOnly('Lokasi Controller','biru').": controllers/Frontend/" . $nama . ".php";
+        }else{
+            echo $this->ColoringTextOnly('Lokasi Controller','biru').": controllers/Backend/" . $nama . ".php";
+        }
         echo "\n\n";
     }
 

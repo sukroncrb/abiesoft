@@ -16,10 +16,22 @@ class Route {
         $dataroute = Reader::yaml("routes");
         foreach($dataroute as $r){
             foreach($r['path'] as $k => $v) {
-                $mt = $v['method'];
                 $ctr = $v['controller'];
                 $fc = $v['function'];
-                $this->$mt($k, [$ctr,$fc]);
+
+                if(count(explode(",",$v['method'])) > 1){
+                    for($i=0; $i<count(explode(",",$v['method'])); $i++){
+                        $mt = explode(",",$v['method'])[$i];
+                        if(count(explode(",",$fc)) > 1){
+                            $this->$mt($k, [$ctr,explode(",",$fc)[$i]]);
+                        }else{
+                            $this->$mt($k, [$ctr,$fc]);
+                        }
+                    }
+                }else{
+                    $mt = $v['method'];
+                    $this->$mt($k, [$ctr,$fc]);
+                }
             }
         }
     }
@@ -55,9 +67,11 @@ class Route {
         $params = $this->params();
         $routemodel = $this->routeModel();
         $middleware = true;
+
         if($routemodel == "backend"){
-            $middleware = Middleware::url($path, 'admin');
+            $middleware = Middleware::url($path, 'admin'); // grup ini berasal dari sesi 
         }
+
         $callback = $this->route[$method][$path];
 
         $data = [
@@ -111,6 +125,14 @@ class Route {
         $callback = $data['callback'];
         $middleware = $data['middleware'];
         $params = $data['params'];
+
+
+        if($callback[0] == "TestController"){
+            $controller = "\App\Controller\Tester\\".$callback[0];
+            $ctrl = new $controller;
+            $fc = $callback[1];
+            return $ctrl->$fc($params);
+        }
 
         if(!$callback){
             return $this->notfound();

@@ -8,6 +8,7 @@
     
 
 # Route Admin
+# route dengan awalan admin akan membaca controller di folder backend
 admin:
   path:
     /admin: 
@@ -19,6 +20,7 @@ admin:
 
 
 # Route Website
+# route akan membaca controller di folder frontend
 website: 
   path: 
     /: 
@@ -32,7 +34,14 @@ website:
 test: 
   path: 
     /test: 
-      method: get
+      # Jika ingin menambahkan method di route yang sama misalkan /test
+      # maka tambahkan dengan pisah koma (,)
+      # contoh : method: get,post 
+      # hal itu berlaku juga untuk function jika ingin lebih dari satu
+      # maka contohnya function: index,post
+      # jika methodnya terdapat dua method dan functionnya satu maka akan
+      # mengarah ke satu function yang sama
+      method: get,post
       controller: TestController
       function: index
     /test/do/:params: 
