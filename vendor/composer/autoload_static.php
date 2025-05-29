@@ -30,6 +30,7 @@ class ComposerStaticInitcc8f297ff958eb97d85b1c60d9a2e6c1
         ),
         'A' => 
         array (
+            'App\\Service\\Api\\' => 16,
             'App\\Schema\\' => 11,
             'App\\Controller\\' => 15,
         ),
@@ -60,6 +61,10 @@ class ComposerStaticInitcc8f297ff958eb97d85b1c60d9a2e6c1
         array (
             0 => __DIR__ . '/..' . '/brick/math/src',
         ),
+        'App\\Service\\Api\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/service/api',
+        ),
         'App\\Schema\\' => 
         array (
             0 => __DIR__ . '/../..' . '/schema',
@@ -77,6 +82,7 @@ class ComposerStaticInitcc8f297ff958eb97d85b1c60d9a2e6c1
         'Latte\\Bridges\\Tracy\\BlueScreenPanel' => __DIR__ . '/..' . '/latte/latte/src/Bridges/Tracy/BlueScreenPanel.php',
         'Latte\\Bridges\\Tracy\\LattePanel' => __DIR__ . '/..' . '/latte/latte/src/Bridges/Tracy/LattePanel.php',
         'Latte\\Bridges\\Tracy\\TracyExtension' => __DIR__ . '/..' . '/latte/latte/src/Bridges/Tracy/TracyExtension.php',
+        'Latte\\Cache' => __DIR__ . '/..' . '/latte/latte/src/Latte/Cache.php',
         'Latte\\CompileException' => __DIR__ . '/..' . '/latte/latte/src/Latte/exceptions.php',
         'Latte\\Compiler\\Block' => __DIR__ . '/..' . '/latte/latte/src/Latte/Compiler/Block.php',
         'Latte\\Compiler\\Escaper' => __DIR__ . '/..' . '/latte/latte/src/Latte/Compiler/Escaper.php',

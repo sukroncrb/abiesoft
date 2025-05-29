@@ -2,6 +2,53 @@
 {block title}{$title}{/block}
 {block css}{/block}
 {block content}
-<div>Hello World</div>
+<section>
+    <form id="{$formid}">
+        <div>
+            <label for="nama">Nama</label>
+            <input id="nama" name="nama">
+        </div>
+        <div>
+            <label for="email">Email</label>
+            <input id="email" name="email">
+        </div>
+        <input type="hidden" id="csrf" name="csrf" value="{$csrf}">
+        <button type="submit">Submit</button>
+    </form>
+</section>
 {/block}
-{block js}{/block}
+{block js}
+<script n:syntax="off">
+const formulir = document.querySelector('form'); // Ini sudah mereferensikan elemen FORM
+
+formulir.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const token = document.querySelector('[data-token]').dataset.token;
+    
+    const formData = new FormData(formulir);
+    formData.append("fid", formulir.id);
+
+    try {
+        const response = await fetch('http://127.0.0.1:8154/api/test', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            },
+            body: formData
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+        }
+
+        const result = await response.json();
+        console.log(result);
+
+    } catch (error) {
+        console.error('Ada masalah dengan operasi fetch:', error);
+    }
+});
+</script>
+{/block}

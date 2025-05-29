@@ -29,6 +29,16 @@ website:
       function: index
 
 
+# Route Api
+# route akan membaca folder service api 
+service: 
+  path: 
+    /api/test: 
+      method: get,post
+      controller: TestService
+      function: load
+
+
 
 # Route Tester
 test: 
@@ -43,7 +53,7 @@ test:
       # mengarah ke satu function yang sama
       method: get,post
       controller: TestController
-      function: index
+      function: index,post
     /test/do/:params: 
       method: get
       controller: TestController

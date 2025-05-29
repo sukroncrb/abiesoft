@@ -4,7 +4,8 @@
         "psr-4": {
             "Sukroncrb2025\\Abiesoft\\": "source/",
             "App\\Controller\\": "controllers/",
-            "App\\Schema\\": "schema/"
+            "App\\Schema\\": "schema/",
+            "App\\Service\\Api\\": "service/api"
         }
     },
     "authors": [

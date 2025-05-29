@@ -65,17 +65,17 @@
         },
         {
             "name": "latte/latte",
-            "version": "v3.0.20",
-            "version_normalized": "3.0.20.0",
+            "version": "v3.0.21",
+            "version_normalized": "3.0.21.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/latte.git",
-                "reference": "4db7a5502f8cef02fffa84fc9c34a635d9c79d4d"
+                "reference": "9302610109836aeb2e540cf2e457414e52597789"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/latte/zipball/4db7a5502f8cef02fffa84fc9c34a635d9c79d4d",
-                "reference": "4db7a5502f8cef02fffa84fc9c34a635d9c79d4d",
+                "url": "https://api.github.com/repos/nette/latte/zipball/9302610109836aeb2e540cf2e457414e52597789",
+                "reference": "9302610109836aeb2e540cf2e457414e52597789",
                 "shasum": ""
             },
             "require": {
@@ -102,7 +102,7 @@
                 "nette/php-generator": "to use tag {templatePrint}",
                 "nette/utils": "to use filter |webalize"
             },
-            "time": "2024-10-08T00:58:27+00:00",
+            "time": "2025-05-17T05:59:24+00:00",
             "bin": [
                 "bin/latte-lint"
             ],
@@ -148,7 +148,7 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/latte/issues",
-                "source": "https://github.com/nette/latte/tree/v3.0.20"
+                "source": "https://github.com/nette/latte/tree/v3.0.21"
             },
             "install-path": "../latte/latte"
         },
@@ -328,23 +328,23 @@
         },
         {
             "name": "symfony/deprecation-contracts",
-            "version": "v3.5.1",
-            "version_normalized": "3.5.1.0",
+            "version": "v3.6.0",
+            "version_normalized": "3.6.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/deprecation-contracts.git",
-                "reference": "74c71c939a79f7d5bf3c1ce9f5ea37ba0114c6f6"
+                "reference": "63afe740e99a13ba87ec199bb07bbdee937a5b62"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/deprecation-contracts/zipball/74c71c939a79f7d5bf3c1ce9f5ea37ba0114c6f6",
-                "reference": "74c71c939a79f7d5bf3c1ce9f5ea37ba0114c6f6",
+                "url": "https://api.github.com/repos/symfony/deprecation-contracts/zipball/63afe740e99a13ba87ec199bb07bbdee937a5b62",
+                "reference": "63afe740e99a13ba87ec199bb07bbdee937a5b62",
                 "shasum": ""
             },
             "require": {
                 "php": ">=8.1"
             },
-            "time": "2024-09-25T14:20:29+00:00",
+            "time": "2024-09-25T14:21:43+00:00",
             "type": "library",
             "extra": {
                 "thanks": {
@@ -352,7 +352,7 @@
                     "name": "symfony/contracts"
                 },
                 "branch-alias": {
-                    "dev-main": "3.5-dev"
+                    "dev-main": "3.6-dev"
                 }
             },
             "installation-source": "dist",
@@ -378,7 +378,7 @@
             "description": "A generic function and convention to trigger deprecation notices",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/deprecation-contracts/tree/v3.5.1"
+                "source": "https://github.com/symfony/deprecation-contracts/tree/v3.6.0"
             },
             "funding": [
                 {

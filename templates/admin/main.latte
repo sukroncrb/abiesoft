@@ -34,7 +34,7 @@
     {include './components/header.latte'}
 
     {block content}{/block}
-
+    <div data-token="{$app['bearer']}"></div>
     <script src="{$baseurl}/assets/admin/js/style.js"></script>
     {block js}{/block}
 

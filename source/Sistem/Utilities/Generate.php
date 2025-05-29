@@ -2,9 +2,11 @@
 
 namespace Sukroncrb2025\Abiesoft\Sistem\Utilities;
 
+use Sukroncrb2025\Abiesoft\Sistem\Mysql\DB;
+
 class Generate {
 
-    protected static function acak()
+    public static function acak()
     {
         $karakter = 'AaBbCcDdEeFfGgHhIiJjKkLMmNnOoPpQqRrSsTtUuVvWwXxYyZz0123456789';
         $batas = strlen($karakter);
@@ -65,13 +67,31 @@ class Generate {
         // return $secretcode;
     }
 
-    public static function csrf(): string
+    public static function formID($class): string
     {
-        // $result = self::acak();
-        // // Secret Code Form
-        // $sccs = Generate::secretCode(['csrf' => $result], Config::fromEnv('SECRET_KEY'));
-        // Cookies::simpan('_scf',$sccs);
-        // return $result;
+        $result = "form-".substr(sha1($class),0,8);
+        return $result;
+    }
+
+    public static function csrf($formid): string
+    {
+        $result = "";
+        $token = self::acak();
+        if(DB::terhubung()->query("SELECT id FROM token WHERE idformulir = ?", [$formid])->hitung() > 0){
+            $input = DB::terhubung()->perbarui('token', DB::terhubung()->query("SELECT id FROM token WHERE idformulir = ?", [$formid])->teks(), [
+                'idformulir' => $formid,
+                'token' => $token
+            ]);
+        }else{
+            $input = DB::terhubung()->input('token', [
+                'idformulir' => $formid,
+                'token' => $token
+            ]);
+        }
+        if($input){
+            $result = $token;
+        }
+        return $result;
     }
 
     public static function password(string $string, string $salt): string

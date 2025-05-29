@@ -3,7 +3,7 @@
 use Latte\Runtime as LR;
 
 /** source: /home/sukroncrb2025/Sukron/abiesoft/source/Sistem/Http/../../../templates/test/home/index.latte */
-final class Template_65dfc147c0 extends Latte\Runtime\Template
+final class Template_5acc867712 extends Latte\Runtime\Template
 {
 	public const Source = '/home/sukroncrb2025/Sukron/abiesoft/source/Sistem/Http/../../../templates/test/home/index.latte';
 
@@ -93,12 +93,13 @@ const formulir = document.querySelector(\'form\'); // Ini sudah mereferensikan e
 formulir.addEventListener(\'submit\', async (e) => {
     e.preventDefault();
     
-    const token = "ini_token_lo";
+    const token = document.querySelector(\'[data-token]\').dataset.token;
     
     const formData = new FormData(formulir);
+    formData.append("fid", formulir.id);
 
     try {
-        const response = await fetch(\'http://127.0.0.1:8154/test\', {
+        const response = await fetch(\'http://127.0.0.1:8154/api/test\', {
             method: \'POST\',
             headers: {
                 \'Authorization\': `Bearer ${token}`,
@@ -112,7 +113,7 @@ formulir.addEventListener(\'submit\', async (e) => {
         }
 
         const result = await response.json();
-        console.log(\'Data berhasil dikirim:\', result);
+        console.log(result);
 
     } catch (error) {
         console.error(\'Ada masalah dengan operasi fetch:\', error);

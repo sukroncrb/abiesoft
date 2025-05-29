@@ -161,7 +161,35 @@ class Route {
     }
 
     protected function api($data) {
-        //
+        
+        $callback = $data['callback'];
+        $middleware = $data['middleware'];
+        $params = $data['params'];
+
+        if(!$callback){
+            return $this->notfound();
+        }
+
+        if(!$middleware) {
+            return $this->forbidden();
+        }
+
+        if(is_array($callback)){
+            $file = __DIR__."/../../../service/api/".$callback[0].".php";
+            if(file_exists($file)){
+                $controller = "\App\Service\Api\\".$callback[0];
+                $ctrl = new $controller;
+                $fc = $callback[1];
+                return $ctrl->$fc($params);
+            }else{
+                $this->notfound();
+            }
+        }
+        
+        if(is_string($callback)){
+            die($callback);
+        }
+
     }
 
 

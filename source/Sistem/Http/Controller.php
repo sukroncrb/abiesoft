@@ -3,7 +3,10 @@
 namespace Sukroncrb2025\Abiesoft\Sistem\Http;
 
 use Latte\Engine;
+use Sukroncrb2025\Abiesoft\Sistem\Mysql\DB;
 use Sukroncrb2025\Abiesoft\Sistem\Utilities\Config;
+use Sukroncrb2025\Abiesoft\Sistem\Utilities\Cookies;
+use Sukroncrb2025\Abiesoft\Sistem\Utilities\Input;
 use Sukroncrb2025\Abiesoft\Sistem\Utilities\Reader;
 
 class Controller {
@@ -33,6 +36,7 @@ class Controller {
             'title' => Reader::env('APP_NAME'),
             'description' => Reader::env('APP_DESCRIPTION'),
             'cover' => "",
+            'bearer' => Cookies::lihat('_cf')
         ];
 
         $finaldata['baseurl'] = Config::baseurl();
@@ -66,6 +70,64 @@ class Controller {
             default => $latte->render($dir . "templates/test/".$template.".latte", $finaldata)
         };
         
+    }
+
+    public function result ($kode = 200, $data = "") {
+        $result = [
+            'code' => $kode,
+            'message' => $this->message($kode),
+            'data' => $data
+        ];
+        return json_encode($result);
+    }
+
+    protected function message($kode = "") {
+        
+        return match($kode){
+            200 => 'OK',
+            300 => 'Redirect',
+            400 => 'Bad Request',
+            401 => 'Unauthorized',
+            402 => 'Payment Required',
+            403 => 'Forbidden',
+            404 => 'Not found',
+            405 => 'Method Not Allowed',
+            500 => 'Internal Server Error',
+            default => "OK"
+        };
+
+    }
+
+
+    public function authentication($method) {
+        
+        // Mengecek bearer
+        $authHeader = $_SERVER['HTTP_AUTHORIZATION'] ?? '';
+        if (empty($authHeader)) {
+            die($this->result(401));
+        }
+
+        // Mencocokan kode bearer dengan yang valid
+        $kode = str_replace("Bearer ", "", $authHeader);
+        $apikey = Reader::secretCode($kode, Reader::env('SECRET_KEY'))['apikey'];
+        if($apikey != Reader::env("APIKEY")){
+            die($this->result(403, $apikey));
+        }
+        
+        return;
+    }
+
+    public function formguard() {
+
+        $idformulir = Input::get('fid');
+        $csrf = Input::get('csrf');
+        $token = DB::terhubung()->query("SELECT token FROM token WHERE idformulir = ? ", [$idformulir])->teks();
+        if($token != $csrf){
+            die($this->result(403, "Token Expire"));
+        }
+
+        return;
+
     }
 
 }
