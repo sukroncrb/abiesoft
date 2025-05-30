@@ -1,0 +1,364 @@
+{layout '../main.latte'}
+{block title}{$title}{/block}
+{block css}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<style>
+/* Global Styles & Font */
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Align ke atas */
+    min-height: 100vh;
+    background-color: #f0f2f5;
+    color: #202124;
+    box-sizing: border-box;
+}
+
+.upload-container {
+    width: 100%;
+    max-width: 600px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    text-align: center;
+}
+
+.upload-container h1 {
+    font-size: 28px;
+    font-weight: 500;
+    margin-bottom: 10px;
+    color: #202124;
+}
+
+.upload-container p {
+    font-size: 16px;
+    color: #5f6368;
+    margin-bottom: 25px;
+}
+
+/* Dropzone Styles */
+.dropzone {
+    border: 2px dashed #dadce0; /* Border putus-putus default */
+    border-radius: 8px;
+    padding: 40px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+    position: relative; /* Penting untuk input file yang disembunyikan */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 180px; /* Tinggi minimal agar terlihat jelas */
+}
+
+.dropzone.dragover {
+    background-color: #e8f0fe; /* Background biru muda saat dragover */
+    border-color: #4285f4; /* Border biru Google saat dragover */
+}
+
+.upload-icon {
+    font-size: 48px;
+    color: #80868b; /* Warna abu-abu ikon */
+    margin-bottom: 15px;
+}
+
+.dropzone p {
+    margin: 0;
+    font-size: 16px;
+    color: #5f6368;
+}
+
+.browse-link {
+    color: #1a73e8; /* Link biru Google */
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.browse-link:hover {
+    text-decoration: underline;
+}
+
+/* File List Styles */
+.file-list {
+    margin-top: 30px;
+    text-align: left;
+}
+
+.file-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    border: 1px solid #e8eaed;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    background-color: #f8f9fa;
+}
+
+.file-item:last-child {
+    margin-bottom: 0;
+}
+
+.file-icon {
+    font-size: 24px;
+    color: #5f6368;
+    margin-right: 15px;
+}
+
+.file-info {
+    flex-grow: 1;
+}
+
+.file-name {
+    font-weight: 500;
+    font-size: 15px;
+    color: #202124;
+    white-space: nowrap; /* Mencegah nama file terpotong */
+    overflow: hidden;
+    text-overflow: ellipsis; /* Menambahkan elipsis jika terlalu panjang */
+    max-width: calc(100% - 120px); /* Sesuaikan dengan lebar progress bar dan ikon */
+}
+
+.file-size {
+    font-size: 13px;
+    color: #80868b;
+}
+
+.progress-container {
+    width: 100%;
+    background-color: #e8eaed;
+    border-radius: 50px;
+    height: 6px;
+    margin-top: 8px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    width: 0%;
+    background-color: #4285f4; /* Biru Google untuk progress */
+    border-radius: 50px;
+    transition: width 0.3s ease;
+}
+
+.upload-status {
+    font-size: 13px;
+    color: #5f6368;
+    margin-left: 15px;
+    min-width: 60px; /* Untuk konsistensi layout */
+    text-align: right;
+}
+
+.upload-status.completed {
+    color: #34a853; /* Hijau Google untuk completed */
+    font-weight: 500;
+}
+
+.upload-status.error {
+    color: #ea4335; /* Merah Google untuk error */
+    font-weight: 500;
+}
+
+/* Responsiveness */
+@media (max-width: 500px) {
+    .upload-container {
+        padding: 20px 15px;
+    }
+
+    .dropzone {
+        padding: 30px 15px;
+        min-height: 150px;
+    }
+
+    .upload-icon {
+        font-size: 40px;
+    }
+
+    .dropzone p {
+        font-size: 14px;
+    }
+
+    .file-item {
+        flex-wrap: wrap; /* Izinkan wrap di mobile */
+    }
+
+    .file-name {
+        max-width: 100%; /* Ambil seluruh lebar */
+        margin-bottom: 5px;
+    }
+
+    .file-size {
+        width: 100%;
+        margin-top: 5px;
+        text-align: left;
+    }
+
+    .upload-status {
+        margin-left: 0;
+        margin-top: 5px;
+        width: 100%;
+        text-align: left;
+    }
+}
+</style>
+{/block}
+{block content}
+
+<section>
+
+<div class="upload-container">
+        <h1>Unggah File Anda</h1>
+        <p>Seret dan lepas file ke sini untuk mengunggah</p>
+
+        <div id="dropzone" class="dropzone">
+            <input type="file" id="fileInput" multiple style="display: none;">
+            <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-cloud-upload"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 18a4.6 4.4 0 0 1 0 -9a5 4.5 0 0 1 11 2h1a3.5 3.5 0 0 1 0 7h-1" /><path d="M9 15l3 -3l3 3" /><path d="M12 12l0 9" /></svg>
+            <p>Seret file ke sini, atau <span class="browse-link">klik untuk memilih file</span></p>
+        </div>
+
+        <div id="fileList" class="file-list">
+            </div>
+    </div>
+
+</section>
+
+{/block}
+{block js}
+<script n:syntax="off">
+document.addEventListener('DOMContentLoaded', () => {
+    const dropzone = document.getElementById('dropzone');
+    const fileInput = document.getElementById('fileInput');
+    const browseLink = document.querySelector('.browse-link');
+    const fileList = document.getElementById('fileList');
+
+    // Mencegah perilaku default browser untuk drag & drop
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dropzone.addEventListener(eventName, preventDefaults, false);
+        document.body.addEventListener(eventName, preventDefaults, false); // Mencegah drop di luar dropzone
+    });
+
+    function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
+    // Menambah/menghapus kelas 'dragover' untuk umpan balik visual
+    dropzone.addEventListener('dragenter', () => dropzone.classList.add('dragover'), false);
+    dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'), false);
+    dropzone.addEventListener('drop', () => dropzone.classList.remove('dragover'), false);
+
+    // Mengklik dropzone akan memicu input file
+    dropzone.addEventListener('click', () => fileInput.click());
+    browseLink.addEventListener('click', (e) => {
+        e.stopPropagation(); // Mencegah event click bubbling ke dropzone lagi
+        fileInput.click();
+    });
+
+    // Menangani file yang di-drop atau dipilih secara manual
+    dropzone.addEventListener('drop', handleDrop, false);
+    fileInput.addEventListener('change', handleFileSelect, false);
+
+    function handleDrop(e) {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        handleFiles(files);
+    }
+
+    function handleFileSelect(e) {
+        const files = e.target.files;
+        handleFiles(files);
+    }
+
+    function handleFiles(files) {
+        if (files.length === 0) return;
+
+        // Kosongkan daftar file sebelumnya jika hanya ingin menampilkan yang baru
+        // fileList.innerHTML = ''; 
+
+        // Tambahkan semua file yang dipilih/di-drop
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            uploadFile(file); // Panggil fungsi upload untuk setiap file
+        }
+    }
+
+    // Fungsi simulasi upload file
+    function uploadFile(file) {
+        const fileItem = document.createElement('div');
+        fileItem.classList.add('file-item');
+
+        const fileIcon = getFileIcon(file.type); // Mendapatkan ikon berdasarkan tipe file
+
+        fileItem.innerHTML = `
+            <span class="material-icons file-icon">${fileIcon}</span>
+            <div class="file-info">
+                <div class="file-name" title="${file.name}">${file.name}</div>
+                <div class="file-size">${formatBytes(file.size)}</div>
+                <div class="progress-container">
+                    <div class="progress-bar" style="width: 0%;"></div>
+                </div>
+            </div>
+            <span class="upload-status">0%</span>
+        `;
+        fileList.appendChild(fileItem);
+
+        const progressBar = fileItem.querySelector('.progress-bar');
+        const uploadStatus = fileItem.querySelector('.upload-status');
+
+        let progress = 0;
+        const interval = setInterval(() => {
+            progress += Math.floor(Math.random() * 10) + 5; // Simulasi kenaikan progress
+            if (progress > 100) progress = 100;
+
+            progressBar.style.width = `${progress}%`;
+            uploadStatus.textContent = `${progress}%`;
+
+            if (progress === 100) {
+                clearInterval(interval);
+                uploadStatus.textContent = 'Selesai!';
+                uploadStatus.classList.add('completed');
+                // Di sini Anda bisa mengirim file sebenarnya ke server
+                console.log(`File ${file.name} (simulasi) berhasil diunggah.`);
+            }
+        }, 200); // Setiap 200ms
+    }
+
+    // Fungsi pembantu untuk mendapatkan ikon Material Icons berdasarkan tipe file
+    function getFileIcon(fileType) {
+        if (fileType.startsWith('image/')) {
+            return '<svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="currentColor"  class="icon icon-tabler icons-tabler-filled icon-tabler-photo"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M8.813 11.612c.457 -.38 .918 -.38 1.386 .011l.108 .098l4.986 4.986l.094 .083a1 1 0 0 0 1.403 -1.403l-.083 -.094l-1.292 -1.293l.292 -.293l.106 -.095c.457 -.38 .918 -.38 1.386 .011l.108 .098l4.674 4.675a4 4 0 0 1 -3.775 3.599l-.206 .005h-12a4 4 0 0 1 -3.98 -3.603l6.687 -6.69l.106 -.095zm9.187 -9.612a4 4 0 0 1 3.995 3.8l.005 .2v9.585l-3.293 -3.292l-.15 -.137c-1.256 -1.095 -2.85 -1.097 -4.096 -.017l-.154 .14l-.307 .306l-2.293 -2.292l-.15 -.137c-1.256 -1.095 -2.85 -1.097 -4.096 -.017l-.154 .14l-5.307 5.306v-9.585a4 4 0 0 1 3.8 -3.995l.2 -.005h12zm-2.99 5l-.127 .007a1 1 0 0 0 0 1.986l.117 .007l.127 -.007a1 1 0 0 0 0 -1.986l-.117 -.007z" /></svg>';
+        } else if (fileType.startsWith('video/')) {
+            return '<svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="currentColor"  class="icon icon-tabler icons-tabler-filled icon-tabler-video"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M20.117 7.625a1 1 0 0 0 -.564 .1l-4.553 2.275v4l4.553 2.275a1 1 0 0 0 1.447 -.892v-6.766a1 1 0 0 0 -.883 -.992z" /><path d="M5 5c-1.645 0 -3 1.355 -3 3v8c0 1.645 1.355 3 3 3h8c1.645 0 3 -1.355 3 -3v-8c0 -1.645 -1.355 -3 -3 -3z" /></svg>';
+        } else if (fileType.startsWith('audio/')) {
+            return '<svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-music"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 17a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" /><path d="M13 17a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" /><path d="M9 17v-13h10v13" /><path d="M9 8h10" /></svg>';
+        } else if (fileType.includes('pdf')) {
+            return '<svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-file-type-pdf"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M14 3v4a1 1 0 0 0 1 1h4" /><path d="M5 12v-7a2 2 0 0 1 2 -2h7l5 5v4" /><path d="M5 18h1.5a1.5 1.5 0 0 0 0 -3h-1.5v6" /><path d="M17 18h2" /><path d="M20 15h-3v6" /><path d="M11 15v6h1a2 2 0 0 0 2 -2v-2a2 2 0 0 0 -2 -2h-1z" /></svg>';
+        } else if (fileType.includes('word') || fileType.includes('document')) {
+            return '<svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="currentColor"  class="icon icon-tabler icons-tabler-filled icon-tabler-file-description"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 2l.117 .007a1 1 0 0 1 .876 .876l.007 .117v4l.005 .15a2 2 0 0 0 1.838 1.844l.157 .006h4l.117 .007a1 1 0 0 1 .876 .876l.007 .117v9a3 3 0 0 1 -2.824 2.995l-.176 .005h-10a3 3 0 0 1 -2.995 -2.824l-.005 -.176v-14a3 3 0 0 1 2.824 -2.995l.176 -.005zm3 14h-6a1 1 0 0 0 0 2h6a1 1 0 0 0 0 -2m0 -4h-6a1 1 0 0 0 0 2h6a1 1 0 0 0 0 -2" /><path d="M19 7h-4l-.001 -4.001z" /></svg>'; // For Word docs
+        } else if (fileType.includes('excel') || fileType.includes('spreadsheet')) {
+            return '<svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="currentColor"  class="icon icon-tabler icons-tabler-filled icon-tabler-layout-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M8 3a3 3 0 0 1 3 3v1a3 3 0 0 1 -3 3h-2a3 3 0 0 1 -3 -3v-1a3 3 0 0 1 3 -3z" /><path d="M8 12a3 3 0 0 1 3 3v3a3 3 0 0 1 -3 3h-2a3 3 0 0 1 -3 -3v-3a3 3 0 0 1 3 -3z" /><path d="M18 3a3 3 0 0 1 3 3v3a3 3 0 0 1 -3 3h-2a3 3 0 0 1 -3 -3v-3a3 3 0 0 1 3 -3z" /><path d="M18 14a3 3 0 0 1 3 3v1a3 3 0 0 1 -3 3h-2a3 3 0 0 1 -3 -3v-1a3 3 0 0 1 3 -3z" /></svg>'; // For Excel sheets
+        } else if (fileType.includes('powerpoint') || fileType.includes('presentation')) {
+            return '<svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="currentColor"  class="icon icon-tabler icons-tabler-filled icon-tabler-layout-sidebar-left-expand"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M18 3a3 3 0 0 1 2.995 2.824l.005 .176v12a3 3 0 0 1 -2.824 2.995l-.176 .005h-12a3 3 0 0 1 -2.995 -2.824l-.005 -.176v-12a3 3 0 0 1 2.824 -2.995l.176 -.005h12zm0 2h-9v14h9a1 1 0 0 0 .993 -.883l.007 -.117v-12a1 1 0 0 0 -.883 -.993l-.117 -.007zm-4.387 4.21l.094 .083l2 2a1 1 0 0 1 .083 1.32l-.083 .094l-2 2a1 1 0 0 1 -1.497 -1.32l.083 -.094l1.292 -1.293l-1.292 -1.293a1 1 0 0 1 -.083 -1.32l.083 -.094a1 1 0 0 1 1.32 -.083z" /></svg>'; // For PowerPoint
+        } else if (fileType.includes('zip') || fileType.includes('rar') || fileType.includes('tar')) {
+            return '<svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="currentColor"  class="icon icon-tabler icons-tabler-filled icon-tabler-archive"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M2 3m0 2a2 2 0 0 1 2 -2h16a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-16a2 2 0 0 1 -2 -2z" /><path d="M19 9c.513 0 .936 .463 .993 1.06l.007 .14v7.2c0 1.917 -1.249 3.484 -2.824 3.594l-.176 .006h-10c-1.598 0 -2.904 -1.499 -2.995 -3.388l-.005 -.212v-7.2c0 -.663 .448 -1.2 1 -1.2h14zm-5 2h-4l-.117 .007a1 1 0 0 0 0 1.986l.117 .007h4l.117 -.007a1 1 0 0 0 0 -1.986l-.117 -.007z" /></svg>';
+        }
+        return '<svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="currentColor"  class="icon icon-tabler icons-tabler-filled icon-tabler-file"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 2l.117 .007a1 1 0 0 1 .876 .876l.007 .117v4l.005 .15a2 2 0 0 0 1.838 1.844l.157 .006h4l.117 .007a1 1 0 0 1 .876 .876l.007 .117v9a3 3 0 0 1 -2.824 2.995l-.176 .005h-10a3 3 0 0 1 -2.995 -2.824l-.005 -.176v-14a3 3 0 0 1 2.824 -2.995l.176 -.005h5z" /><path d="M19 7h-4l-.001 -4.001z" /></svg>'; // Default icon
+    }
+
+    // Fungsi pembantu untuk format ukuran file
+    function formatBytes(bytes, decimals = 2) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const dm = decimals < 0 ? 0 : decimals;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+    }
+});
+</script>
+{/block}

@@ -1,0 +1,714 @@
+{layout '../main.latte'}
+{block title}{$title}{/block}
+{block css}
+<link rel="stylesheet" href="form-style.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f4f6f9; /* Light grey background */
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    margin: 0;
+    padding: 30px 20px;
+    box-sizing: border-box;
+}
+
+.settings-page-wrapper {
+    display: flex;
+    gap: 20px; /* Space between sidebar and content */
+    width: 100%;
+    max-width: 1200px; /* Max width for the entire page */
+    box-sizing: border-box;
+}
+
+/* --- Reusable Card Style --- */
+.card {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+}
+
+/* --- Sidebar Styling --- */
+.settings-sidebar {
+    flex-shrink: 0; /* Prevent shrinking */
+    width: 250px; /* Fixed width for sidebar */
+    padding: 24px 0; /* Padding top/bottom, 0 left/right because nav-items have padding */
+    height: fit-content; /* Only take up as much height as content */
+    position: sticky; /* Make sidebar sticky */
+    top: 30px; /* Stick to this distance from top */
+}
+
+.settings-sidebar h2 {
+    font-size: 24px;
+    font-weight: 500;
+    color: #3c4043;
+    padding: 0 24px 15px; /* Padding for the title */
+    margin-top: 0;
+    border-bottom: 1px solid #eee;
+}
+
+.settings-nav {
+    display: flex;
+    flex-direction: column;
+    padding-top: 10px;
+}
+
+.settings-nav .nav-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 24px; /* Consistent padding with header */
+    color: #5f6368;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 500;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    border-left: 3px solid transparent; /* For active indicator */
+}
+
+.settings-nav .nav-item svg {
+    margin-right: 15px;
+    font-size: 20px;
+}
+
+.settings-nav .nav-item:hover {
+    background-color: #e6f4ea; /* Light green hover effect */
+    color: #202124;
+}
+
+.settings-nav .nav-item.active {
+    background-color: #e8f0fe; /* Light blue background for active */
+    color: #1a73e8; /* Google blue text for active */
+    border-left-color: #1a73e8; /* Blue bar on the left */
+}
+
+/* --- Main Content Styling --- */
+.settings-content {
+    flex-grow: 1; /* Take remaining space */
+}
+
+.settings-section {
+    display: none; /* Hidden by default */
+}
+
+.settings-section.active {
+    display: block; /* Show active section */
+}
+
+.settings-section .section-title {
+    font-size: 28px;
+    font-weight: 500;
+    color: #202124;
+    margin-top: 0;
+    margin-bottom: 25px;
+}
+
+.setting-card {
+    padding: 24px;
+    margin-bottom: 20px; /* Space between setting cards */
+}
+
+.setting-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid #eee; /* Separator between setting items */
+}
+
+.setting-item:last-child {
+    border-bottom: none; /* No border for the last item */
+    padding-bottom: 0;
+}
+
+.setting-info {
+    flex-grow: 1; /* Allow info to take space */
+    padding-right: 20px; /* Space before control */
+}
+
+.setting-info h4 {
+    font-size: 18px;
+    font-weight: 500;
+    color: #3c4043;
+    margin-top: 0;
+    margin-bottom: 5px;
+}
+
+.setting-info p {
+    font-size: 14px;
+    color: #5f6368;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.setting-control {
+    flex-shrink: 0; /* Prevent control from shrinking */
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* --- Custom Control Styles --- */
+
+/* Select Box */
+.google-select {
+    padding: 8px 30px 8px 12px;
+    border: 1px solid #dadce0;
+    border-radius: 4px;
+    font-size: 15px;
+    color: #202124;
+    background-color: #f8f9fa;
+    appearance: none; /* Remove default arrow */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url('data:image/svg+xml;utf8,<svg fill="#5f6368" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    background-size: 20px;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.google-select:focus {
+    border-color: #1a73e8;
+    box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2);
+}
+
+/* Radio Group */
+.radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start; /* Align labels to the left */
+}
+
+.radio-option {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 15px;
+    color: #202124;
+    user-select: none;
+}
+
+.radio-option input[type="radio"] {
+    display: none; /* Hide native radio */
+}
+
+.radio-option span {
+    position: relative;
+    padding-left: 28px; /* Space for custom radio button */
+}
+
+.radio-option span::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    border: 2px solid #5f6368;
+    border-radius: 50%;
+    background-color: #fff;
+    transition: all 0.2s ease;
+}
+
+.radio-option span::after {
+    content: '';
+    position: absolute;
+    left: 6px; /* Center dot */
+    top: 50%;
+    transform: translateY(-50%);
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #1a73e8; /* Blue dot */
+    opacity: 0;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.radio-option input[type="radio"]:checked + span::before {
+    border-color: #1a73e8;
+}
+
+.radio-option input[type="radio"]:checked + span::after {
+    opacity: 1;
+}
+
+/* Google Switch (Toggle) */
+.google-switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 20px;
+}
+
+.google-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 16px; /* Thumb size */
+    width: 16px; /* Thumb size */
+    left: 2px;
+    bottom: 2px;
+    background-color: white;
+    transition: .4s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+}
+
+input:checked + .slider {
+    background-color: #8ab4f8; /* Light blue track when checked */
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px #1a73e8;
+}
+
+input:checked + .slider:before {
+    transform: translateX(20px); /* Move thumb to right */
+    background-color: #1a73e8; /* Blue thumb when checked */
+}
+
+.slider.round {
+    border-radius: 20px; /* Rounded track */
+}
+
+.slider.round:before {
+    border-radius: 50%; /* Rounded thumb */
+}
+
+/* Plain Text for info display */
+.plain-text {
+    font-size: 15px;
+    color: #202124;
+    margin: 0;
+    padding: 0;
+}
+
+/* Material Button (reusing from previous examples) */
+.material-button {
+    background-color: #1a73e8; /* Google blue primary */
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    text-decoration: none; /* For link buttons */
+}
+
+.material-button:hover {
+    background-color: #1760cc;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+}
+
+.material-button.secondary {
+    background-color: transparent;
+    color: #1a73e8; /* Blue text */
+    border: 1px solid #dadce0; /* Subtle border */
+    box-shadow: none; /* No shadow */
+    padding: 8px 16px; /* Slightly smaller for secondary */
+}
+
+.material-button.secondary:hover {
+    background-color: rgba(26, 115, 232, 0.08); /* Light blue background on hover */
+    box-shadow: none;
+}
+
+.material-button.small {
+    padding: 6px 12px;
+    font-size: 13px;
+}
+
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 900px) {
+    .settings-page-wrapper {
+        flex-direction: column; /* Stack sidebar and content */
+        gap: 15px;
+        padding: 20px;
+    }
+
+    .settings-sidebar {
+        width: 100%; /* Full width for sidebar */
+        position: static; /* No longer sticky */
+        top: auto;
+        padding-bottom: 20px;
+    }
+
+    .settings-sidebar h2 {
+        text-align: center;
+        padding-bottom: 10px;
+    }
+
+    .settings-nav {
+        flex-direction: row; /* Horizontal scroll for navigation */
+        overflow-x: auto;
+        padding-top: 0;
+        justify-content: flex-start;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .settings-nav .nav-item {
+        flex-shrink: 0; /* Prevent shrinking */
+        min-width: 140px; /* Min width for each tab */
+        text-align: center;
+        justify-content: center;
+        padding: 10px 15px;
+        border-left: none; /* Remove left border */
+        border-bottom: 3px solid transparent; /* Use bottom border for active */
+    }
+    .settings-nav .nav-item .material-icons {
+        margin-right: 8px; /* Smaller margin for icon */
+    }
+
+    .settings-nav .nav-item.active {
+        border-left-color: transparent;
+        border-bottom-color: #1a73e8; /* Blue bottom bar */
+    }
+
+    .settings-section .section-title {
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+
+    .setting-card {
+        padding: 20px;
+    }
+
+    .setting-item {
+        flex-direction: column; /* Stack info and control */
+        align-items: flex-start; /* Align left */
+        padding: 15px 0;
+    }
+
+    .setting-info {
+        padding-right: 0;
+        margin-bottom: 10px; /* Space between info and control */
+        width: 100%;
+    }
+
+    .setting-control {
+        width: 100%; /* Controls take full width */
+        justify-content: flex-start; /* Align controls to left */
+    }
+}
+
+/* Further smaller screen adjustments */
+@media (max-width: 480px) {
+    body {
+        padding: 15px;
+    }
+    .settings-page-wrapper {
+        gap: 10px;
+    }
+    .settings-sidebar h2 {
+        font-size: 20px;
+    }
+    .settings-section .section-title {
+        font-size: 22px;
+        margin-bottom: 15px;
+    }
+    .setting-info h4 {
+        font-size: 16px;
+    }
+    .setting-info p {
+        font-size: 13px;
+    }
+}
+</style>
+{/block}
+{block content}
+
+<section>
+
+    <div class="settings-page-wrapper">
+        <aside class="settings-sidebar card">
+            <h2>Settings</h2>
+            <nav class="settings-nav">
+                <a href="#general-settings" class="nav-item active" data-section="general">
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-settings"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z" /><path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" /></svg>  General
+                </a>
+                <a href="#privacy-security" class="nav-item" data-section="privacy">
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-lock"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 13a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v6a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-6z" /><path d="M11 16a1 1 0 1 0 2 0a1 1 0 0 0 -2 0" /><path d="M8 11v-4a4 4 0 1 1 8 0v4" /></svg> Privacy & security
+                </a>
+                <a href="#notifications" class="nav-item" data-section="notifications">
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-bell"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 5a2 2 0 1 1 4 0a7 7 0 0 1 4 6v3a4 4 0 0 0 2 3h-16a4 4 0 0 0 2 -3v-3a7 7 0 0 1 4 -6" /><path d="M9 17v1a3 3 0 0 0 6 0v-1" /></svg> Notifications
+                </a>
+                <a href="#account-info" class="nav-item" data-section="account">
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-user"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" /><path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" /></svg> Account info
+                </a>
+            </nav>
+        </aside>
+
+        <main class="settings-content">
+
+            <section id="general-settings" class="settings-section active">
+                <h3 class="section-title">General Settings</h3>
+
+                <div class="setting-card card">
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <h4>Language</h4>
+                            <p>Choose your preferred language for the interface.</p>
+                        </div>
+                        <div class="setting-control">
+                            <select class="google-select">
+                                <option value="en" selected>English (US)</option>
+                                <option value="id">Bahasa Indonesia</option>
+                                <option value="es">Español</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <h4>Theme</h4>
+                            <p>Adjust the visual theme of the application.</p>
+                        </div>
+                        <div class="setting-control radio-group">
+                            <label class="radio-option">
+                                <input type="radio" name="theme" value="light" checked>
+                                <span>Light</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="theme" value="dark">
+                                <span>Dark</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="theme" value="system">
+                                <span>System default</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="setting-card card">
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <h4>Show welcome messages</h4>
+                            <p>Display helpful tips and welcome messages on startup.</p>
+                        </div>
+                        <div class="setting-control">
+                            <label class="google-switch">
+                                <input type="checkbox" checked>
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <h4>Enable offline mode</h4>
+                            <p>Access certain features even without an internet connection.</p>
+                        </div>
+                        <div class="setting-control">
+                            <label class="google-switch">
+                                <input type="checkbox">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+
+            <section id="privacy-security" class="settings-section">
+                <h3 class="section-title">Privacy & Security</h3>
+
+                <div class="setting-card card">
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <h4>Two-factor authentication</h4>
+                            <p>Add an extra layer of security to your account.</p>
+                        </div>
+                        <div class="setting-control">
+                            <button class="material-button secondary">Set up</button>
+                        </div>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <h4>Manage connected apps</h4>
+                            <p>Review and revoke access for third-party applications.</p>
+                        </div>
+                        <div class="setting-control">
+                            <button class="material-button secondary">Manage</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="setting-card card">
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <h4>Personalized ads</h4>
+                            <p>Control whether you see ads tailored to your interests.</p>
+                        </div>
+                        <div class="setting-control">
+                            <label class="google-switch">
+                                <input type="checkbox" checked>
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="notifications" class="settings-section">
+                <h3 class="section-title">Notifications</h3>
+                <div class="setting-card card">
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <h4>Email notifications</h4>
+                            <p>Receive updates and alerts via email.</p>
+                        </div>
+                        <div class="setting-control">
+                            <label class="google-switch">
+                                <input type="checkbox" checked>
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <h4>Push notifications</h4>
+                            <p>Get instant alerts on your device.</p>
+                        </div>
+                        <div class="setting-control">
+                            <label class="google-switch">
+                                <input type="checkbox">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <h4>SMS alerts</h4>
+                            <p>Get critical updates sent to your phone.</p>
+                        </div>
+                        <div class="setting-control">
+                            <label class="google-switch">
+                                <input type="checkbox">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="account-info" class="settings-section">
+                <h3 class="section-title">Account Information</h3>
+                <div class="setting-card card">
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <h4>Account ID</h4>
+                            <p>Your unique identifier for this service.</p>
+                        </div>
+                        <div class="setting-control">
+                            <p class="plain-text">USER123456789</p>
+                        </div>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <h4>Email address</h4>
+                            <p>Primary email associated with your account.</p>
+                        </div>
+                        <div class="setting-control">
+                            <p class="plain-text">user@example.com</p>
+                            <button class="material-button secondary small">Change</button>
+                        </div>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <h4>Password</h4>
+                            <p>Last changed: 2 months ago</p>
+                        </div>
+                        <div class="setting-control">
+                            <button class="material-button secondary small">Change password</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+</section>
+
+{/block}
+{block js}
+<script n:syntax="off">
+document.addEventListener('DOMContentLoaded', () => {
+    const navItems = document.querySelectorAll('.settings-nav .nav-item');
+    const settingsSections = document.querySelectorAll('.settings-section');
+
+    // Function to activate a section and its corresponding nav item
+    function activateSection(sectionId) {
+        // Deactivate all nav items and sections
+        navItems.forEach(item => item.classList.remove('active'));
+        settingsSections.forEach(section => section.classList.remove('active'));
+
+        // Activate the clicked nav item
+        const activeNavItem = document.querySelector(`.settings-nav .nav-item[data-section="${sectionId}"]`);
+        if (activeNavItem) {
+            activeNavItem.classList.add('active');
+        }
+
+        // Activate the corresponding section
+        const activeSection = document.getElementById(`${sectionId}-settings`); // Assuming IDs are like "general-settings"
+        if (activeSection) {
+            activeSection.classList.add('active');
+        }
+    }
+
+    // Add click listeners to navigation items
+    navItems.forEach(navItem => {
+        navItem.addEventListener('click', (e) => {
+            e.preventDefault(); // Prevent default anchor link behavior
+            const sectionId = navItem.dataset.section;
+            activateSection(sectionId);
+
+            // Optional: Update URL hash for direct linking/bookmarking
+            // window.location.hash = sectionId;
+        });
+    });
+
+    // Handle initial load based on URL hash (if present)
+    const initialHash = window.location.hash.substring(1); // Remove '#'
+    if (initialHash) {
+        // Map hash to section ID (e.g., #general -> general)
+        const sectionIdFromHash = initialHash.replace('-settings', '');
+        activateSection(sectionIdFromHash);
+    } else {
+        // Activate the first section by default if no hash is present
+        if (navItems.length > 0) {
+            const firstSectionId = navItems[0].dataset.section;
+            activateSection(firstSectionId);
+        }
+    }
+});
+</script>
+{/block}

@@ -17,6 +17,8 @@
     <meta name="googlebot-news" content="index, follow" />
 
     <link rel="stylesheet" href="{$baseurl}/assets/admin/css/style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     {block css}{/block}
     <title>{block title}{/block}</title>
 
@@ -31,9 +33,15 @@
         </div>
     </div>
 
-    {include './components/header.latte'}
 
-    {block content}{/block}
+    {include './components/navbar.latte'}
+
+    <div class="container">
+        {include './components/sidebar.latte'}
+        {block content}{/block}
+    </div>
+
+    {block modal}{/block}
     <div data-token="{$app['bearer']}"></div>
     <script src="{$baseurl}/assets/admin/js/style.js"></script>
     {block js}{/block}

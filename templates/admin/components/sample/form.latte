@@ -1,0 +1,439 @@
+{layout '../main.latte'}
+{block title}{$title}{/block}
+{block css}
+<link rel="stylesheet" href="form-style.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+    --primary-color: #673ab7; /* Deep Purple A700 - Common Google color */
+    --primary-light-color: #9575cd;
+    --primary-dark-color: #4527a0;
+    --accent-color: #ff4081; /* Pink A200 - Common Material Design accent */
+    --text-color: #3c4043; /* Dark grey for general text */
+    --label-color: #5f6368; /* Slightly lighter grey for labels */
+    --border-color: #dadce0; /* Light grey for borders */
+    --focus-border-color: #1a73e8; /* Google Blue for focus */
+    --error-color: #d93025; /* Red for errors */
+    --background-color: #f8f9fa; /* Light background */
+    --card-background: #ffffff; /* White card background */
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: var(--background-color);
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Align to top for longer forms */
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+.form-container {
+    background-color: var(--card-background);
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(60, 64, 67, 0.1), 0 1px 2px rgba(60, 64, 67, 0.1); /* Material Design shadow */
+    padding: 30px;
+    max-width: 600px;
+    width: 100%;
+    margin-bottom: 20px; /* Space from bottom if content is long */
+}
+
+.form .form-title {
+    font-size: 28px;
+    font-weight: 500;
+    color: var(--text-color);
+    margin-bottom: 10px;
+}
+
+.form .form-description {
+    font-size: 16px;
+    color: var(--label-color);
+    margin-bottom: 25px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.input-label {
+    display: block;
+    font-size: 14px;
+    color: var(--label-color);
+    margin-bottom: 8px;
+    font-weight: 500; /* Slightly bolder for clarity */
+}
+
+.input-wrapper {
+    position: relative;
+    display: flex; /* For icon inside input */
+    align-items: center;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background-color: #f8f9fa; /* Light background for input area */
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.input-wrapper:has(.form-input:focus) { /* Modern way to style parent when child is focused */
+    border-color: var(--focus-border-color);
+    box-shadow: 0 1px 1px rgba(26, 115, 232, 0.08);
+    background-color: var(--card-background); /* White background on focus */
+}
+
+.input-wrapper .icon {
+    color: var(--label-color);
+    font-size: 20px;
+    margin: 0 12px;
+}
+
+.form-input,
+.form-textarea,
+.form-select {
+    width: 100%;
+    padding: 12px 15px;
+    padding-left: var(--input-padding-left, 15px); /* Custom property for icon padding */
+    border: none; /* Remove default border */
+    outline: none; /* Remove default outline */
+    font-size: 16px;
+    color: var(--text-color);
+    background-color: transparent; /* Make input transparent to show wrapper background */
+    border-radius: 4px;
+    box-sizing: border-box; /* Include padding in width */
+}
+
+/* Adjust padding for input with icon */
+.input-wrapper .form-input {
+    --input-padding-left: 0; /* Override if icon is present, as icon has its own margin */
+    padding-left: 0;
+}
+
+.form-textarea {
+    resize: vertical; /* Allow vertical resizing */
+    min-height: 80px;
+    border: 1px solid var(--border-color); /* Textarea needs its own border */
+    background-color: #f8f9fa; /* Light background for textarea */
+    border-radius: 4px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.form-textarea:focus {
+    border-color: var(--focus-border-color);
+    box-shadow: 0 1px 1px rgba(26, 115, 232, 0.08);
+    background-color: var(--card-background);
+}
+
+
+.form-select {
+    appearance: none; /* Remove default arrow for custom styling */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url('data:image/svg+xml;utf8,<svg fill="%235f6368" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>'); /* Custom arrow */
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 24px;
+    border: 1px solid var(--border-color); /* Select needs its own border */
+    background-color: #f8f9fa; /* Light background for select */
+    border-radius: 4px;
+    padding-right: 40px; /* Space for custom arrow */
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.form-select:focus {
+    border-color: var(--focus-border-color);
+    box-shadow: 0 1px 1px rgba(26, 115, 232, 0.08);
+    background-color: var(--card-background);
+}
+
+/* Radio and Checkbox Styling */
+.radio-group, .checkbox-group {
+    padding-top: 5px; /* Add some space above options */
+}
+
+.radio-option, .checkbox-option {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+.radio-option label, .checkbox-option label {
+    font-size: 16px;
+    color: var(--text-color);
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+/* Hide default radio/checkbox */
+.form-radio, .form-checkbox {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--label-color);
+    border-radius: 50%; /* Radio */
+    display: inline-block;
+    position: relative;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+    flex-shrink: 0; /* Prevent shrinking */
+}
+
+.form-checkbox {
+    border-radius: 4px; /* Checkbox */
+}
+
+/* Checked state for radio */
+.form-radio:checked {
+    border-color: var(--primary-color);
+}
+
+.form-radio:checked::after {
+    content: '';
+    width: 10px;
+    height: 10px;
+    background-color: var(--primary-color);
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* Checked state for checkbox */
+.form-checkbox:checked {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.form-checkbox:checked::after {
+    content: '';
+    position: absolute;
+    left: 6px;
+    top: 2px;
+    width: 6px;
+    height: 12px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+/* Focus states for radio/checkbox */
+.form-radio:focus, .form-checkbox:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.2); /* Google blue glow */
+}
+
+/* Button Styling */
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.button {
+    padding: 10px 24px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+    text-transform: uppercase; /* Material Design buttons are often uppercase */
+}
+
+.button-primary {
+    background-color: var(--primary-color);
+    color: var(--card-background); /* White text on primary button */
+    border: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+.button-primary:hover {
+    background-color: var(--primary-dark-color);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* Deeper shadow on hover */
+}
+
+.button-primary:active {
+    background-color: var(--primary-dark-color);
+    box-shadow: none; /* Flat on active */
+}
+
+.button-secondary {
+    background-color: transparent;
+    color: var(--primary-color); /* Primary color text for secondary */
+    border: 1px solid var(--primary-color);
+}
+
+.button-secondary:hover {
+    background-color: rgba(103, 58, 183, 0.08); /* Light primary color background on hover */
+}
+
+.button-secondary:active {
+    background-color: rgba(103, 58, 183, 0.15);
+}
+</style>
+{/block}
+{block content}
+
+<section>
+
+    <div class="form-container">
+        <form class="form">
+            <h2 class="form-title">Registration Form</h2>
+            <p class="form-description">Please fill out your details below.</p>
+
+            <div class="form-group">
+                <label for="name" class="input-label">Full Name</label>
+                <div class="input-wrapper">
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="currentColor"  class="icon icon-tabler icons-tabler-filled icon-tabler-user"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 2a5 5 0 1 1 -5 5l.005 -.217a5 5 0 0 1 4.995 -4.783z" /><path d="M14 14a5 5 0 0 1 5 5v1a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-1a5 5 0 0 1 5 -5h4z" /></svg>
+                    <input type="text" id="name" name="name" class="form-input" placeholder="Enter your full name" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="email" class="input-label">Email Address</label>
+                <div class="input-wrapper">
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="currentColor"  class="icon icon-tabler icons-tabler-filled icon-tabler-mail"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M22 7.535v9.465a3 3 0 0 1 -2.824 2.995l-.176 .005h-14a3 3 0 0 1 -2.995 -2.824l-.005 -.176v-9.465l9.445 6.297l.116 .066a1 1 0 0 0 .878 0l.116 -.066l9.445 -6.297z" /><path d="M19 4c1.08 0 2.027 .57 2.555 1.427l-9.555 6.37l-9.555 -6.37a2.999 2.999 0 0 1 2.354 -1.42l.201 -.007h14z" /></svg>
+                    <input type="email" id="email" name="email" class="form-input" placeholder="your.email@example.com" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="message" class="input-label">Your Message</label>
+                <textarea id="message" name="message" class="form-textarea" rows="4" placeholder="Type your message here..."></textarea>
+            </div>
+
+            <div class="form-group radio-group">
+                <label class="input-label">Gender</label>
+                <div class="radio-option">
+                    <input type="radio" id="male" name="gender" value="male" class="form-radio">
+                    <label for="male">Male</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" id="female" name="gender" value="female" class="form-radio">
+                    <label for="female">Female</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" id="other" name="gender" value="other" class="form-radio">
+                    <label for="other">Other</label>
+                </div>
+            </div>
+
+            <div class="form-group checkbox-group">
+                <label class="input-label">Interests</label>
+                <div class="checkbox-option">
+                    <input type="checkbox" id="sports" name="interests" value="sports" class="form-checkbox">
+                    <label for="sports">Sports</label>
+                </div>
+                <div class="checkbox-option">
+                    <input type="checkbox" id="reading" name="interests" value="reading" class="form-checkbox">
+                    <label for="reading">Reading</label>
+                </div>
+                <div class="checkbox-option">
+                    <input type="checkbox" id="coding" name="interests" value="coding" class="form-checkbox">
+                    <label for="coding">Coding</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="country" class="input-label">Country</label>
+                <select id="country" name="country" class="form-select">
+                    <option value="">Select your country</option>
+                    <option value="ID">Indonesia</option>
+                    <option value="US">United States</option>
+                    <option value="CA">Canada</option>
+                    <option value="GB">United Kingdom</option>
+                </select>
+            </div>
+
+            <div class="form-actions">
+                <button type="reset" class="button button-secondary">Reset</button>
+                <button type="submit" class="button button-primary">Submit</button>
+            </div>
+        </form>
+    </div>
+
+</section>
+
+{/block}
+{block js}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // Handle floating labels for input and textarea
+    const formGroups = document.querySelectorAll('.form-group');
+
+    formGroups.forEach(group => {
+        const input = group.querySelector('input, textarea');
+        const label = group.querySelector('label');
+
+        if (input && label) {
+            // Function to update label position
+            const updateLabel = () => {
+                if (input.value.length > 0 || input === document.activeElement) {
+                    label.classList.add('active'); // Add a class to move the label
+                } else {
+                    label.classList.remove('active'); // Remove to move back
+                }
+            };
+
+            // Initial check on page load (e.g., if form fields are pre-filled by browser)
+            updateLabel();
+
+            // Listen for input and focus events
+            input.addEventListener('input', updateLabel);
+            input.addEventListener('focus', updateLabel);
+            input.addEventListener('blur', updateLabel); // When user leaves the field
+        }
+    });
+
+    // Handle floating label for select
+    const selectElements = document.querySelectorAll('.select-group select');
+
+    selectElements.forEach(select => {
+        const label = select.previousElementSibling; // Assuming label is right before select
+
+        // Initial check
+        if (select.value && select.value !== "") {
+            select.classList.add('has-value');
+            if (label && label.tagName.toLowerCase() === 'label') {
+                label.classList.add('active');
+            }
+        }
+
+        select.addEventListener('change', () => {
+            if (select.value && select.value !== "") {
+                select.classList.add('has-value');
+                if (label && label.tagName.toLowerCase() === 'label') {
+                    label.classList.add('active');
+                }
+            } else {
+                select.classList.remove('has-value');
+                if (label && label.tagName.toLowerCase() === 'label') {
+                    label.classList.remove('active');
+                }
+            }
+        });
+
+        // For focus/blur of select to also trigger label animation
+        select.addEventListener('focus', () => {
+            if (label && label.tagName.toLowerCase() === 'label') {
+                label.classList.add('active');
+            }
+        });
+
+        select.addEventListener('blur', () => {
+             // Only move label back if no value is selected AND it's not focused
+            if (!select.value && select.value === "") {
+                if (label && label.tagName.toLowerCase() === 'label') {
+                    label.classList.remove('active');
+                }
+            }
+        });
+    });
+});
+</script>
+{/block}

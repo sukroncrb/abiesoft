@@ -1,0 +1,304 @@
+{layout '../main.latte'}
+{block title}{$title}{/block}
+{block css}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<style>
+/* Global Styles & Font */
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f0f2f5; /* Warna latar belakang ringan */
+    color: #202124; /* Warna teks utama Google */
+    box-sizing: border-box;
+}
+
+/* Container untuk centering */
+.login-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    width: 100%; /* Agar bisa responsif */
+    max-width: 450px; /* Lebar maksimal konten */
+}
+
+/* Login Card (kotak putih) */
+.login-card {
+    background-color: #ffffff;
+    border-radius: 8px; /* Sudut membulat */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24); /* Shadow halus */
+    padding: 48px 40px 36px;
+    width: 100%; /* Lebar card */
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.login-header {
+    margin-bottom: 24px;
+}
+
+.google-logo {
+    width: 75px; /* Sesuaikan ukuran logo */
+    height: auto;
+    margin-bottom: 16px;
+}
+
+.login-header h1 {
+    font-size: 24px;
+    font-weight: 400; /* Font weight sesuai Google */
+    margin: 0 0 8px 0;
+    color: #202124;
+}
+
+.login-header p {
+    font-size: 16px;
+    color: #5f6368; /* Warna teks sekunder */
+    margin: 0;
+}
+
+/* Input Group (untuk label melayang) */
+.input-group {
+    position: relative;
+    margin-bottom: 24px;
+    width: 100%;
+}
+
+.input-group input {
+    width: calc(100% - 24px); /* Lebar input dikurangi padding */
+    padding: 14px 12px;
+    font-size: 16px;
+    border: 1px solid #dadce0; /* Border tipis */
+    border-radius: 4px;
+    outline: none;
+    background-color: transparent; /* Penting untuk transisi label */
+    box-sizing: border-box;
+    transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    color: #202124;
+}
+
+.input-group label {
+    position: absolute;
+    left: 12px;
+    top: 14px;
+    font-size: 16px;
+    color: #80868b; /* Warna label default */
+    pointer-events: none; /* Agar label tidak menghalangi klik input */
+    transition: top 0.2s ease-in-out, font-size 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+/* Efek label melayang saat input fokus atau terisi */
+.input-group input:focus + label,
+.input-group input:not(:placeholder-shown) + label { /* :not(:placeholder-shown) untuk input yang sudah ada isinya */
+    top: -10px; /* Pindah ke atas */
+    font-size: 12px; /* Ukuran lebih kecil */
+    color: #1a73e8; /* Warna biru Google saat fokus */
+    background-color: #ffffff; /* Background untuk label agar tidak tumpang tindih */
+    padding: 0 4px;
+    left: 8px; /* Sedikit geser ke kiri */
+}
+
+.input-group input:focus {
+    border-color: #1a73e8; /* Border biru saat fokus */
+    box-shadow: 0 0 0 1px #1a73e8; /* Sedikit shadow */
+}
+
+/* Tombol aksi */
+.form-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-top: 24px;
+}
+
+.forgot-password {
+    color: #1a73e8; /* Link biru Google */
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 14px;
+    transition: color 0.2s ease-in-out;
+}
+
+.forgot-password:hover {
+    color: #0d47a1; /* Biru lebih gelap saat hover */
+    text-decoration: underline;
+}
+
+.next-button {
+    background-color: #1a73e8; /* Biru Google */
+    color: #ffffff;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.next-button:hover {
+    background-color: #176ac3; /* Biru lebih gelap saat hover */
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+}
+
+.next-button:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.4); /* Fokus cincin biru */
+}
+
+
+/* Footer di dalam card */
+.login-footer {
+    width: 100%;
+    text-align: left;
+    margin-top: 40px; /* Jarak dari form */
+}
+
+.login-footer p {
+    font-size: 14px;
+    color: #5f6368;
+    margin-bottom: 8px;
+}
+
+.create-account-link {
+    color: #1a73e8;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 14px;
+    transition: color 0.2s ease-in-out;
+}
+
+.create-account-link:hover {
+    color: #0d47a1;
+    text-decoration: underline;
+}
+
+/* Language Selector dan Help Links (di luar card) */
+.language-selector {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 450px; /* Harus sama dengan login-container max-width */
+    margin-top: 32px;
+    font-size: 12px;
+    color: #5f6368;
+}
+
+.language-selector select {
+    border: none;
+    background-color: transparent;
+    font-size: 12px;
+    color: #5f6368;
+    padding: 4px;
+    border-radius: 4px;
+    cursor: pointer;
+    outline: none;
+}
+
+.language-selector select:hover {
+    background-color: #e8eaed; /* Background saat hover */
+}
+
+.help-links a {
+    color: #5f6368;
+    text-decoration: none;
+    margin-left: 16px;
+    transition: color 0.2s ease-in-out;
+}
+
+.help-links a:hover {
+    color: #202124;
+    text-decoration: underline;
+}
+
+/* Responsiveness */
+@media (max-width: 500px) {
+    .login-card {
+        padding: 32px 24px 24px; /* Padding lebih kecil di mobile */
+        box-shadow: none; /* Hilangkan shadow di mobile untuk tampilan fullscreen-like */
+        border-radius: 0; /* Hilangkan border-radius di mobile */
+        height: 100vh; /* Ambil seluruh tinggi viewport */
+        justify-content: center; /* Pusatkan konten vertikal */
+    }
+
+    body {
+        background-color: #ffffff; /* Background putih penuh di mobile */
+    }
+
+    .login-container {
+        padding: 0;
+    }
+
+    .language-selector {
+        display: none; /* Sembunyikan selector di mobile (biasanya ada di footer internal atau menu) */
+    }
+}
+</style>
+{/block}
+{block content}
+
+<section>
+
+<div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <img src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" alt="Google Logo" class="google-logo">
+                <h1>Masuk</h1>
+                <p>Gunakan Akun Google Anda</p>
+            </div>
+
+            <form class="login-form">
+                <div class="input-group">
+                    <input type="email" id="email" required autocomplete="username">
+                    <label for="email">Email atau ponsel</label>
+                </div>
+
+                <div class="input-group">
+                    <input type="password" id="password" required autocomplete="current-password">
+                    <label for="password">Password</label>
+                </div>
+
+                <div class="form-actions">
+                    <a href="#" class="forgot-password">Lupa sandi?</a>
+                    <button type="submit" class="next-button">Berikutnya</button>
+                </div>
+            </form>
+
+            <div class="login-footer">
+                <p>Belum punya akun?</p>
+                <a href="#" class="create-account-link">Buat akun</a>
+            </div>
+        </div>
+
+        <div class="language-selector">
+            <select>
+                <option value="id">Bahasa Indonesia</option>
+                <option value="en">English (United States)</option>
+                <option value="jp">日本語</option>
+            </select>
+            <div class="help-links">
+                <a href="#">Bantuan</a>
+                <a href="#">Privasi</a>
+                <a href="#">Persyaratan</a>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+{/block}
+{block js}
+<script n:syntax="off">
+
+</script>
+{/block}

@@ -1,0 +1,247 @@
+{layout '../main.latte'}
+{block title}{$title}{/block}
+{block css}
+<link rel="stylesheet" href="form-style.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f4f6f9;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    margin: 0;
+    padding: 30px 20px;
+    box-sizing: border-box;
+}
+
+.tabs-container {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 700px;
+    overflow: hidden; /* Ensures content stays within rounded corners */
+}
+
+.tab-bar {
+    display: flex;
+    border-bottom: 1px solid #dadce0; /* Thin separator line below tabs */
+    position: relative; /* For positioning the indicator */
+    background-color: #f8f9fa; /* Slightly off-white background for the tab bar itself */
+}
+
+.tab-button {
+    flex-grow: 1; /* Distributes space equally */
+    padding: 15px 20px;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    color: #5f6368; /* Default grey text color for inactive tabs */
+    transition: color 0.3s ease;
+    outline: none; /* Remove focus outline */
+    white-space: nowrap; /* Prevent text from wrapping */
+    text-align: center;
+}
+
+.tab-button:hover:not(.active) {
+    background-color: #e6f4ea; /* Subtle green hover effect */
+}
+
+.tab-button.active {
+    color: #1a73e8; /* Google blue for active tab text */
+    /* The active underline is handled by .tab-indicator */
+}
+
+.tab-indicator {
+    position: absolute;
+    bottom: -1px; /* Align with the border-bottom of .tab-bar */
+    height: 3px; /* Thickness of the indicator bar */
+    background-color: #1a73e8; /* Google blue indicator */
+    transition: left 0.3s ease-out, width 0.3s ease-out; /* Smooth animation */
+    /* Initial state is set by JS */
+}
+
+.tab-content-container {
+    padding: 20px;
+}
+
+.tab-content {
+    display: none; /* Hide all content by default */
+}
+
+.tab-content.active {
+    display: block; /* Show active content */
+}
+
+/* Optional: Basic styling for content within tabs */
+.tab-content h3 {
+    color: #3c4043;
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+.tab-content p,
+.tab-content ul {
+    color: #5f6368;
+    line-height: 1.6;
+}
+
+.tab-content ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.tab-content ul li {
+    margin-bottom: 8px;
+}
+
+.tab-content label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 15px;
+    color: #202124;
+}
+
+/* Responsive adjustments for many tabs or smaller screens */
+@media (max-width: 600px) {
+    .tab-bar {
+        overflow-x: auto; /* Enable horizontal scrolling if tabs exceed width */
+        justify-content: flex-start; /* Do not stretch tabs */
+        -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+    }
+
+    .tab-button {
+        flex-shrink: 0; /* Prevent tabs from shrinking */
+        min-width: 120px; /* Minimum width for each tab */
+    }
+}
+</style>
+{/block}
+{block content}
+
+<section>
+
+    <div class="tabs-container">
+        <div class="tab-bar">
+            <button class="tab-button active" data-tab="tab1">Home</button>
+            <button class="tab-button" data-tab="tab2">Profile</button>
+            <button class="tab-button" data-tab="tab3">Settings</button>
+            <button class="tab-button" data-tab="tab4">Notifications</button>
+            <div class="tab-indicator"></div>
+        </div>
+
+        <div class="tab-content-container">
+            <div id="tab1" class="tab-content active">
+                <h3>Welcome to the Home Tab!</h3>
+                <p>This is the content for the home section of your application. You can put any relevant information here.</p>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            </div>
+            <div id="tab2" class="tab-content">
+                <h3>Your Profile Information</h3>
+                <p>Manage your personal details, profile picture, and privacy settings here.</p>
+                <ul>
+                    <li>Name: John Doe</li>
+                    <li>Email: john.doe@example.com</li>
+                    <li>Member Since: Jan 1, 2023</li>
+                </ul>
+            </div>
+            <div id="tab3" class="tab-content">
+                <h3>Application Settings</h3>
+                <p>Customize your application experience. Toggle features, themes, and more.</p>
+                <label><input type="checkbox" checked> Enable Dark Mode</label><br>
+                <label><input type="checkbox"> Receive Email Notifications</label>
+            </div>
+            <div id="tab4" class="tab-content">
+                <h3>Your Notifications</h3>
+                <p>Here you will find all your recent alerts and messages.</p>
+                <ul>
+                    <li>New message from Admin.</li>
+                    <li>Your subscription is expiring soon.</li>
+                    <li>Reminder: Meeting at 3 PM.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+{/block}
+{block js}
+<script n:syntax="off">
+document.addEventListener('DOMContentLoaded', () => {
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabContents = document.querySelectorAll('.tab-content');
+    const tabIndicator = document.querySelector('.tab-indicator');
+    const tabBar = document.querySelector('.tab-bar');
+
+    // Function to update the indicator's position and width
+    function updateIndicator(activeButton) {
+        if (!activeButton) {
+            // If no active button, hide indicator or set to default
+            tabIndicator.style.width = '0';
+            tabIndicator.style.left = '0';
+            return;
+        }
+
+        const buttonRect = activeButton.getBoundingClientRect();
+        const tabBarRect = tabBar.getBoundingClientRect();
+
+        // Calculate left position relative to the tab bar
+        const left = buttonRect.left - tabBarRect.left;
+        const width = buttonRect.width;
+
+        tabIndicator.style.left = `${left}px`;
+        tabIndicator.style.width = `${width}px`;
+    }
+
+    // Initialize the indicator position for the active tab on load
+    const initialActiveButton = document.querySelector('.tab-button.active');
+    updateIndicator(initialActiveButton);
+
+    tabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            // Deactivate current active tab and content
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            tabContents.forEach(content => content.classList.remove('active'));
+
+            // Activate clicked tab
+            button.classList.add('active');
+
+            // Show corresponding content
+            const targetTabId = button.dataset.tab;
+            const targetContent = document.getElementById(targetTabId);
+            if (targetContent) {
+                targetContent.classList.add('active');
+            }
+
+            // Update indicator position
+            updateIndicator(button);
+
+            // Scroll the clicked tab into view if the tab bar is scrollable
+            // This is especially useful on smaller screens
+            const scrollContainer = tabBar;
+            const buttonRect = button.getBoundingClientRect();
+            const containerRect = scrollContainer.getBoundingClientRect();
+
+            if (buttonRect.left < containerRect.left) { // Tab is to the left of view
+                scrollContainer.scrollLeft += buttonRect.left - containerRect.left;
+            } else if (buttonRect.right > containerRect.right) { // Tab is to the right of view
+                scrollContainer.scrollLeft += buttonRect.right - containerRect.right;
+            }
+        });
+    });
+
+    // Optional: Recalculate indicator position on window resize
+    window.addEventListener('resize', () => {
+        const currentActiveButton = document.querySelector('.tab-button.active');
+        updateIndicator(currentActiveButton);
+    });
+});
+</script>
+{/block}

@@ -1,0 +1,444 @@
+{layout '../main.latte'}
+{block title}{$title}{/block}
+{block css}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<style>
+/* General Body Styles */
+body {
+    font-family: 'Roboto', Arial, sans-serif; /* Google uses Roboto */
+    margin: 0;
+    padding: 0;
+    background-color: #f8f9fa;
+    color: #3c4043;
+    overflow-x: hidden; /* Prevent horizontal scroll when sidebar is out */
+}
+
+/* Navbar Styles */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 20px;
+    background-color: #fff;
+    border-bottom: 1px solid #e0e0e0;
+    box-shadow: 0 1px 6px rgba(0,0,0,.1);
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    height: 64px; /* Fixed height for navbar */
+    box-sizing: border-box; /* Include padding in height */
+}
+
+.navbar-left, .navbar-right {
+    display: flex;
+    align-items: center;
+}
+
+.navbar-left .logo img {
+    height: 24px; /* Adjust Google logo size */
+    margin-left: 15px;
+}
+
+/* Buttons in Navbar (sidebar toggle, app launcher, profile toggle) */
+.sidebar-toggle, .app-launcher, .dropdown-toggle {
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: #5f6368;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    transition: background-color 0.2s ease-in-out;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sidebar-toggle:hover, .app-launcher:hover, .dropdown-toggle:hover {
+    background-color: #f0f0f0;
+}
+
+.sidebar-toggle {
+    margin-right: 15px;
+}
+
+/* Search Bar */
+.navbar-center {
+    flex-grow: 1; /* Allow search bar to take available space */
+    max-width: 600px; /* Limit max width for desktop */
+    margin: 0 20px;
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    background-color: #f1f3f4;
+    border-radius: 24px;
+    padding: 8px 15px;
+    width: 100%;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,.1);
+}
+
+.search-bar svg {
+    color: #5f6368;
+    margin-right: 10px;
+}
+
+.search-bar input {
+    border: none;
+    background: none;
+    outline: none;
+    flex-grow: 1;
+    font-size: 16px;
+    color: #202124;
+}
+
+.search-bar .mic-icon {
+    margin-left: 10px;
+    margin-right: 0;
+    cursor: pointer;
+}
+
+/* Profile Dropdown */
+.profile-dropdown {
+    position: relative;
+    display: inline-block;
+    margin-left: 20px;
+}
+
+.profile-dropdown .avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.profile-dropdown .dropdown-toggle {
+    padding: 0; /* Remove padding from button to fit avatar */
+    width: 40px; /* Make button slightly larger than avatar for hover effect */
+    height: 40px;
+}
+
+.profile-dropdown .dropdown-menu {
+    display: none;
+    position: absolute;
+    background-color: #fff;
+    min-width: 250px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1001; /* Higher than navbar z-index */
+    border-radius: 8px;
+    padding: 10px 0;
+    list-style: none;
+    margin-top: 10px;
+    right: 0; /* Align to the right of the toggle button */
+    border: 1px solid #e0e0e0;
+}
+
+.profile-dropdown .dropdown-menu.show {
+    display: block;
+}
+
+.profile-dropdown .dropdown-menu li a {
+    color: #3c4043;
+    padding: 10px 20px;
+    text-decoration: none;
+    display: flex; /* Use flex for icon and text alignment */
+    align-items: center;
+    font-size: 14px;
+}
+
+.profile-dropdown .dropdown-menu li a svg {
+    margin-right: 10px;
+    color: #5f6368;
+}
+
+.profile-dropdown .dropdown-menu li a:hover {
+    background-color: #f1f1f1;
+}
+
+.profile-dropdown .dropdown-menu .divider {
+    height: 1px;
+    background-color: #e8eaed;
+    margin: 8px 0;
+}
+
+.profile-dropdown .dropdown-menu .profile-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 15px 20px;
+    text-align: center;
+}
+
+.profile-dropdown .dropdown-menu .profile-info .avatar-large {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+    overflow: hidden;
+}
+
+.profile-dropdown .dropdown-menu .profile-info .avatar-large {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+}
+
+.profile-dropdown .dropdown-menu .profile-info span {
+    font-weight: 500;
+    margin-bottom: 5px;
+    color: #202124;
+}
+
+.profile-dropdown .dropdown-menu .profile-info small {
+    color: #70757a;
+    font-size: 13px;
+}
+
+/* Container for Main Content and Sidebar */
+.container {
+    display: flex;
+    margin-top: 64px; /* Space for the fixed navbar */
+}
+
+/* Sidebar Styles */
+.sidebar {
+    width: 250px;
+    background-color: #fff;
+    height: calc(100vh - 64px); /* Full height minus navbar height */
+    position: fixed;
+    top: 64px;
+    left: 0;
+    box-shadow: 2px 0 6px rgba(0,0,0,.1);
+    padding-top: 15px;
+    transform: translateX(-100%); /* Start hidden */
+    transition: transform 0.3s ease-in-out;
+    z-index: 999; /* Below navbar, above main content */
+}
+
+.sidebar.active {
+    transform: translateX(0); /* Show sidebar */
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar ul li a {
+    display: flex;
+    align-items: center;
+    padding: 12px 25px;
+    color: #3c4043;
+    text-decoration: none;
+    font-size: 15px;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.sidebar ul li a svg {
+    margin-right: 15px;
+    color: #5f6368;
+    font-size: 18px;
+}
+
+.sidebar ul li a:hover, .sidebar ul li a.active {
+    background-color: #e8f0fe;
+    color: #1a73e8;
+    border-radius: 0 50px 50px 0; /* Rounded corners on right */
+    font-weight: 500;
+}
+
+.sidebar ul li a.active svg {
+    color: #1a73e8;
+}
+
+.sidebar .divider {
+    height: 1px;
+    background-color: #e8eaed;
+    margin: 10px 0;
+}
+
+/* Main Content Styles */
+.main-content {
+    flex-grow: 1;
+    padding: 30px;
+    margin-left: 0; /* Default margin when sidebar is hidden */
+    transition: margin-left 0.3s ease-in-out;
+    background-color: #f8f9fa;
+    min-height: calc(100vh - 64px);
+}
+
+.main-content.pushed {
+    margin-left: 250px; /* Pushed to the right when sidebar is active */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .navbar-center {
+        display: none; /* Hide search bar on smaller screens */
+    }
+
+    .navbar-left .logo img {
+        margin-left: 0; /* Adjust logo position */
+    }
+
+    .main-content.pushed {
+        margin-left: 0; /* Don't push content on small screens when sidebar is active */
+    }
+}
+</style>
+{/block}
+{block content}
+
+<section>
+
+<div class="navbar">
+        <div class="navbar-left">
+            <button class="sidebar-toggle" aria-label="Toggle Sidebar">
+                <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-menu-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 6l16 0" /><path d="M4 12l16 0" /><path d="M4 18l16 0" /></svg>
+            </button>
+            <a href="#" class="logo">
+                <img src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" alt="Google Logo">
+            </a>
+        </div>
+        <div class="navbar-center">
+            <div class="search-bar">
+                <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-search"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
+                <input type="text" placeholder="Search...">
+                <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-microphone"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 2m0 3a3 3 0 0 1 3 -3h0a3 3 0 0 1 3 3v5a3 3 0 0 1 -3 3h0a3 3 0 0 1 -3 -3z" /><path d="M5 10a7 7 0 0 0 14 0" /><path d="M8 21l8 0" /><path d="M12 17l0 4" /></svg>
+            </div>
+        </div>
+        <div class="navbar-right">
+            <button class="app-launcher" aria-label="Google Apps">
+                <i class="fas fa-th-large"></i>
+            </button>
+            <div class="profile-dropdown">
+                <button class="dropdown-toggle" aria-label="Profile Menu">
+                    <img src="https://media.istockphoto.com/id/1398385367/photo/happy-millennial-business-woman-in-glasses-posing-with-hands-folded.jpg?s=612x612&w=0&k=20&c=Wd2vTDd6tJ5SeEY-aw0WL0bew8TAkyUGVvNQRj3oJFw=" alt="Avatar" class="avatar">
+                </button>
+                <ul class="dropdown-menu">
+                    <li class="profile-info">
+                        <img src="https://media.istockphoto.com/id/1398385367/photo/happy-millennial-business-woman-in-glasses-posing-with-hands-folded.jpg?s=612x612&w=0&k=20&c=Wd2vTDd6tJ5SeEY-aw0WL0bew8TAkyUGVvNQRj3oJFw=" alt="Avatar Besar" class="avatar-large">
+                        <span>Nama Pengguna</span>
+                        <small>emailanda@gmail.com</small>
+                    </li>
+                    <li class="divider"></li>
+                    <li><a href="#profile">
+                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-user"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" /><path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" /></svg>
+                        Profil Saya</a></li>
+                    <li><a href="#settings">
+                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-settings"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z" /><path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" /></svg>
+                        Pengaturan</a></li>
+                    <li><a href="#help">
+                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-help"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" /><path d="M12 17l0 .01" /><path d="M12 13.5a1.5 1.5 0 0 1 1 -1.5a2.6 2.6 0 1 0 -3 -4" /></svg>
+                        Bantuan</a></li>
+                    <li class="divider"></li>
+                    <li><a href="#logout">
+                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-logout"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2" /><path d="M9 12h12l-3 -3" /><path d="M18 15l3 -3" /></svg>
+                        Keluar</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="sidebar">
+            <ul>
+                <li><a href="#" class="active">
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-home"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l-2 0l9 -9l9 9l-2 0" /><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" /><path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" /></svg>
+                    Beranda</a></li>
+                <li><a href="#">
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-star"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z" /></svg>
+                    Favorit</a></li>
+                <li><a href="#">
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-history"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 8l0 4l2 2" /><path d="M3.05 11a9 9 0 1 1 .5 4m-.5 5v-5h5" /></svg>
+                    Riwayat</a></li>
+                <li class="divider"></li>
+                <li><a href="#">
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-file-check"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M14 3v4a1 1 0 0 0 1 1h4" /><path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" /><path d="M9 15l2 2l4 -4" /></svg>
+                    Dokumen</a></li>
+                <li><a href="#">
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-library-photo"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 3m0 2.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z" /><path d="M4.012 7.26a2.005 2.005 0 0 0 -1.012 1.737v10c0 1.1 .9 2 2 2h10c.75 0 1.158 -.385 1.5 -1" /><path d="M17 7h.01" /><path d="M7 13l3.644 -3.644a1.21 1.21 0 0 1 1.712 0l3.644 3.644" /><path d="M15 12l1.644 -1.644a1.21 1.21 0 0 1 1.712 0l2.644 2.644" /></svg>
+                    Gambar</a></li>
+                <li><a href="#">
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-video"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 10l4.553 -2.276a1 1 0 0 1 1.447 .894v6.764a1 1 0 0 1 -1.447 .894l-4.553 -2.276v-4z" /><path d="M3 6m0 2a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-8a2 2 0 0 1 -2 -2z" /></svg>
+                    Video</a></li>
+            </ul>
+        </div>
+
+        <div class="main-content">
+            <h1>Selamat Datang!</h1>
+            <p>Ini adalah area konten utama Anda. Sidebar dapat disembunyikan/ditampilkan dan menu profil dapat diakses.</p>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+        </div>
+    </div>
+
+</section>
+
+{/block}
+{block js}
+<script n:syntax="off">
+document.addEventListener('DOMContentLoaded', function() {
+    const sidebarToggle = document.querySelector('.sidebar-toggle');
+    const sidebar = document.querySelector('.sidebar');
+    const mainContent = document.querySelector('.main-content');
+
+    const profileDropdownToggle = document.querySelector('.profile-dropdown .dropdown-toggle');
+    const profileDropdownMenu = document.querySelector('.profile-dropdown .dropdown-menu');
+
+    // Toggle Sidebar
+    sidebarToggle.addEventListener('click', function() {
+        sidebar.classList.toggle('active');
+        mainContent.classList.toggle('pushed');
+
+        // Close profile dropdown if open when sidebar is toggled
+        if (profileDropdownMenu.classList.contains('show')) {
+            profileDropdownMenu.classList.remove('show');
+        }
+    });
+
+    // Toggle Profile Dropdown
+    profileDropdownToggle.addEventListener('click', function(event) {
+        profileDropdownMenu.classList.toggle('show');
+        event.stopPropagation(); // Prevent document click from immediately closing it
+    });
+
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', function(event) {
+        // Close profile dropdown if clicked outside
+        if (!profileDropdownToggle.contains(event.target) && !profileDropdownMenu.contains(event.target)) {
+            profileDropdownMenu.classList.remove('show');
+        }
+
+        // Close sidebar if clicked outside (only if sidebar is active and click is not on toggle)
+        if (sidebar.classList.contains('active') && !sidebar.contains(event.target) && !sidebarToggle.contains(event.target)) {
+            // Check if screen is small (where sidebar overlay behavior might be desired)
+            // For simplicity here, we always close on outside click on desktop.
+            // For mobile, you might want a transparent overlay to achieve this.
+            // For this setup, simply closing it is fine.
+            sidebar.classList.remove('active');
+            mainContent.classList.remove('pushed');
+        }
+    });
+
+    // Close profile dropdown if sidebar is opened
+    sidebarToggle.addEventListener('click', function() {
+        if (profileDropdownMenu.classList.contains('show')) {
+            profileDropdownMenu.classList.remove('show');
+        }
+    });
+
+    // Close sidebar if profile dropdown is opened (optional, based on desired UX)
+    profileDropdownToggle.addEventListener('click', function() {
+        if (sidebar.classList.contains('active')) {
+            sidebar.classList.remove('active');
+            mainContent.classList.remove('pushed');
+        }
+    });
+});
+</script>
+{/block}

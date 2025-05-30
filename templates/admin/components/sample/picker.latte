@@ -1,0 +1,334 @@
+{layout '../main.latte'}
+{block title}{$title}{/block}
+{block css}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<style>
+/* Global Styles & Font */
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f0f2f5;
+    color: #202124;
+    box-sizing: border-box;
+}
+
+h1 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+#dateInput {
+    padding: 10px 15px;
+    font-size: 16px;
+    border: 1px solid #dadce0;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+#dateInput:focus {
+    border-color: #4285f4;
+    box-shadow: 0 0 0 1px #4285f4;
+}
+
+/* Calendar Picker Container */
+.calendar-picker {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 300px; /* Lebar khas date picker Google */
+    overflow: hidden;
+    display: none; /* Sembunyikan default, akan ditampilkan dengan JS */
+}
+
+.calendar-picker.show {
+    display: block; /* Tampilkan saat JavaScript menambahkan kelas 'show' */
+}
+
+/* Calendar Header (Month & Year, Navigation Buttons) */
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    border-bottom: 1px solid #eee;
+}
+
+.nav-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%; /* Tombol bulat */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s ease;
+}
+
+.nav-button:hover {
+    background-color: #f0f0f0;
+}
+
+.nav-button .material-icons {
+    font-size: 24px;
+    color: #5f6368; /* Warna ikon abu-abu */
+}
+
+.current-month-year {
+    font-size: 18px;
+    font-weight: 500;
+    color: #202124;
+}
+
+/* Weekdays (Senin, Selasa, dll.) */
+.calendar-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    padding: 8px 0;
+    font-size: 12px;
+    color: #5f6368; /* Warna abu-abu untuk nama hari */
+    text-align: center;
+    border-bottom: 1px solid #eee;
+}
+
+.calendar-weekdays span {
+    padding: 4px 0;
+    font-weight: 500;
+}
+
+/* Calendar Dates Grid */
+.calendar-dates {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    padding: 10px;
+}
+
+.date-cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 38px; /* Tinggi sel */
+    width: 38px; /* Lebar sel (agar bulat) */
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 50%; /* Untuk membuat tanggal terpilih/hari ini terlihat bulat */
+    transition: background-color 0.2s ease, color 0.2s ease;
+    margin: 2px auto; /* Margin untuk spasi antar tanggal */
+}
+
+.date-cell:hover:not(.selected):not(.today):not(.out-of-month) {
+    background-color: #f0f0f0; /* Efek hover ringan */
+}
+
+/* Tanggal dari bulan lain */
+.date-cell.out-of-month {
+    color: #ccc; /* Warna abu-abu terang */
+    cursor: default;
+}
+
+.date-cell.out-of-month:hover {
+    background-color: transparent; /* Pastikan tidak ada hover di sini */
+}
+
+/* Tanggal Hari Ini */
+.date-cell.today {
+    border: 1px solid #4285f4; /* Border biru Google */
+    color: #4285f4;
+    font-weight: 500;
+}
+
+.date-cell.today:hover {
+    background-color: #e8f0fe; /* Background biru muda saat hover hari ini */
+}
+
+/* Tanggal Terpilih */
+.date-cell.selected {
+    background-color: #4285f4; /* Background biru Google */
+    color: #ffffff;
+    font-weight: 500;
+}
+
+.date-cell.selected:hover {
+    background-color: #357ae8; /* Biru lebih gelap saat hover yang terpilih */
+}
+
+/* Responsiveness (opsional, karena ukuran sudah cukup compact) */
+@media (max-width: 400px) {
+    .calendar-picker {
+        max-width: 280px;
+    }
+    .date-cell {
+        height: 35px;
+        width: 35px;
+    }
+}
+</style>
+{/block}
+{block content}
+
+<section>
+
+<h1>Pilih Tanggal</h1>
+    <input type="text" id="dateInput" placeholder="Klik untuk memilih tanggal">
+
+    <div id="calendarPicker" class="calendar-picker">
+        <div class="calendar-header">
+            <button id="prevMonthBtn" class="nav-button">
+                <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-left"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l14 0" /><path d="M5 12l6 6" /><path d="M5 12l6 -6" /></svg>
+            </button>
+            <div class="current-month-year" id="currentMonthYear">Mei 2025</div>
+            <button id="nextMonthBtn" class="nav-button">
+                <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l14 0" /><path d="M13 18l6 -6" /><path d="M13 6l6 6" /></svg>
+            </button>
+        </div>
+        <div class="calendar-weekdays">
+            <span>Min</span>
+            <span>Sen</span>
+            <span>Sel</span>
+            <span>Rab</span>
+            <span>Kam</span>
+            <span>Jum</span>
+            <span>Sab</span>
+        </div>
+        <div class="calendar-dates" id="calendarDates">
+            </div>
+    </div>
+
+</section>
+
+{/block}
+{block js}
+<script n:syntax="off">
+document.addEventListener('DOMContentLoaded', () => {
+    const dateInput = document.getElementById('dateInput');
+    const calendarPicker = document.getElementById('calendarPicker');
+    const currentMonthYear = document.getElementById('currentMonthYear');
+    const prevMonthBtn = document.getElementById('prevMonthBtn');
+    const nextMonthBtn = document.getElementById('nextMonthBtn');
+    const calendarDates = document.getElementById('calendarDates');
+
+    let currentDate = new Date(); // Tanggal saat ini, akan digunakan untuk navigasi bulan
+    let selectedDate = null; // Tanggal yang dipilih pengguna
+
+    // Fungsi untuk menampilkan/menyembunyikan date picker
+    dateInput.addEventListener('click', () => {
+        calendarPicker.classList.toggle('show');
+        // Saat dibuka, pastikan menampilkan bulan yang benar
+        renderCalendar(currentDate);
+    });
+
+    // Menutup date picker jika klik di luar
+    document.addEventListener('click', (event) => {
+        if (!calendarPicker.contains(event.target) && event.target !== dateInput) {
+            calendarPicker.classList.remove('show');
+        }
+    });
+
+    // Fungsi utama untuk menggambar kalender
+    function renderCalendar(date) {
+        // Atur currentMonthYear text
+        const options = { year: 'numeric', month: 'long' };
+        currentMonthYear.textContent = date.toLocaleDateString('id-ID', options); // Sesuaikan dengan locale Anda
+
+        calendarDates.innerHTML = ''; // Bersihkan tanggal sebelumnya
+
+        const year = date.getFullYear();
+        const month = date.getMonth(); // 0-11
+
+        // Dapatkan tanggal pertama dan terakhir bulan ini
+        const firstDayOfMonth = new Date(year, month, 1);
+        const lastDayOfMonth = new Date(year, month + 1, 0); // Hari ke-0 dari bulan berikutnya adalah hari terakhir bulan ini
+
+        // Dapatkan hari dalam seminggu untuk tanggal 1 (0=Minggu, 1=Senin, dst)
+        // Sesuaikan jika minggu dimulai dari Senin di desain Anda (misal: (firstDayOfMonth.getDay() + 6) % 7)
+        const startDayOfWeek = firstDayOfMonth.getDay(); // 0 for Sunday, 1 for Monday
+
+        // Dapatkan hari terakhir bulan sebelumnya untuk mengisi awal grid
+        const lastDayOfPrevMonth = new Date(year, month, 0).getDate();
+
+        // Isi tanggal dari bulan sebelumnya
+        for (let i = startDayOfWeek -1; i >= 0; i--) { // Sesuaikan loop ini berdasarkan startDayOfWeek
+            const dateCell = document.createElement('div');
+            dateCell.classList.add('date-cell', 'out-of-month');
+            dateCell.textContent = lastDayOfPrevMonth - i;
+            calendarDates.appendChild(dateCell);
+        }
+
+        // Isi tanggal bulan ini
+        for (let i = 1; i <= lastDayOfMonth.getDate(); i++) {
+            const dateCell = document.createElement('div');
+            dateCell.classList.add('date-cell');
+            dateCell.textContent = i;
+
+            const currentCellDate = new Date(year, month, i);
+
+            // Tandai hari ini
+            if (isSameDay(currentCellDate, new Date())) {
+                dateCell.classList.add('today');
+            }
+
+            // Tandai tanggal yang dipilih
+            if (selectedDate && isSameDay(currentCellDate, selectedDate)) {
+                dateCell.classList.add('selected');
+            }
+
+            // Event listener untuk memilih tanggal
+            dateCell.addEventListener('click', () => {
+                selectedDate = currentCellDate;
+                dateInput.value = selectedDate.toLocaleDateString('id-ID'); // Format sesuai keinginan
+                calendarPicker.classList.remove('show'); // Tutup picker setelah memilih
+                renderCalendar(currentDate); // Render ulang untuk update highlight
+            });
+
+            calendarDates.appendChild(dateCell);
+        }
+
+        // Isi tanggal dari bulan berikutnya (untuk melengkapi grid 6x7 atau 5x7)
+        // Hitung berapa banyak sel yang sudah terisi
+        const totalCellsFilled = startDayOfWeek + lastDayOfMonth.getDate();
+        const remainingCells = 42 - totalCellsFilled; // Maksimal 6 minggu * 7 hari = 42 sel
+
+        for (let i = 1; i <= remainingCells; i++) {
+             // Pastikan tidak ada tanggal dari bulan berikutnya jika grid sudah penuh (misal hanya 5 minggu)
+            if (totalCellsFilled + i > 35 && totalCellsFilled + i <= 42) { // Minimum 5 minggu (35 hari), maksimal 6 minggu (42 hari)
+                const dateCell = document.createElement('div');
+                dateCell.classList.add('date-cell', 'out-of-month');
+                dateCell.textContent = i;
+                calendarDates.appendChild(dateCell);
+            }
+        }
+    }
+
+    // Navigasi bulan
+    prevMonthBtn.addEventListener('click', () => {
+        currentDate.setMonth(currentDate.getMonth() - 1);
+        renderCalendar(currentDate);
+    });
+
+    nextMonthBtn.addEventListener('click', () => {
+        currentDate.setMonth(currentDate.getMonth() + 1);
+        renderCalendar(currentDate);
+    });
+
+    // Fungsi pembantu untuk membandingkan tanggal (mengabaikan waktu)
+    function isSameDay(d1, d2) {
+        return d1.getFullYear() === d2.getFullYear() &&
+               d1.getMonth() === d2.getMonth() &&
+               d1.getDate() === d2.getDate();
+    }
+
+    // Render kalender saat halaman dimuat
+    renderCalendar(currentDate);
+});
+</script>
+{/block}

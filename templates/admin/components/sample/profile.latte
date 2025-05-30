@@ -1,0 +1,487 @@
+{layout '../main.latte'}
+{block title}{$title}{/block}
+{block css}
+<link rel="stylesheet" href="form-style.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f4f6f9; /* Light grey background */
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    margin: 0;
+    padding: 30px 20px;
+    box-sizing: border-box;
+}
+
+.profile-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Space between cards/sections */
+    width: 100%;
+    max-width: 800px; /* Max width for readability */
+}
+
+/* --- Card Base Style --- */
+.card {
+    background-color: #ffffff;
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for elevation */
+    padding: 24px;
+    box-sizing: border-box;
+}
+
+/* --- Profile Header Section --- */
+.profile-header {
+    text-align: center;
+    padding-top: 0; /* Adjust padding for banner/picture positioning */
+    position: relative; /* For profile picture positioning */
+}
+
+.profile-banner {
+    background-color: #4285F4; /* Google Blue */
+    height: 120px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    margin: -24px -24px 0 -24px; /* Extend to cover full width of card */
+    position: relative;
+    overflow: hidden; /* For banner image */
+}
+/* If you use an image in .profile-banner uncomment and adjust below */
+/*
+.profile-banner img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+*/
+
+.profile-picture-wrapper {
+    position: relative;
+    margin-top: -60px; /* Pull picture up over the banner */
+    margin-bottom: 15px;
+    display: inline-block; /* For centering */
+    border: 4px solid #ffffff; /* White border around picture */
+    border-radius: 50%; /* Membuat wrapper bulat sempurna */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2); /* Shadow for picture itself */
+    /* Tambahkan width dan height yang sama untuk wrapper */
+    width: 120px; /* Pastikan ini sama dengan width .profile-picture */
+    height: 120px; /* Pastikan ini sama dengan height .profile-picture */
+    overflow: hidden; /* Penting untuk memotong gambar di dalam bentuk bulat */
+}
+
+.profile-picture {
+    width: 100%; /* Mengisi penuh lebar wrapper */
+    height: 100%; /* Mengisi penuh tinggi wrapper */
+    border-radius: 50%; /* Membuat gambar bulat sempurna */
+    object-fit: cover; /* Penting! Memastikan gambar memenuhi lingkaran tanpa distorsi */
+    display: block; /* Menghilangkan spasi ekstra di bawah gambar */
+}
+
+.profile-name {
+    font-size: 32px;
+    font-weight: 500;
+    color: #202124;
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+
+.profile-tagline {
+    font-size: 16px;
+    color: #5f6368;
+    margin-bottom: 25px;
+}
+
+.profile-actions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+/* --- Material Buttons --- */
+.material-button {
+    background-color: #1a73e8; /* Google blue primary */
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    text-decoration: none; /* For link buttons */
+}
+
+.material-button:hover {
+    background-color: #1760cc;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+}
+
+.material-button.secondary {
+    background-color: transparent;
+    color: #1a73e8; /* Blue text */
+    border: 1px solid #dadce0; /* Subtle border */
+    box-shadow: none; /* No shadow */
+}
+
+.material-button.secondary:hover {
+    background-color: rgba(26, 115, 232, 0.08); /* Light blue background on hover */
+    box-shadow: none;
+}
+
+
+/* --- General Section Styling --- */
+.profile-section {
+    padding: 24px;
+}
+
+.profile-section .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #eee; /* Light separator */
+}
+
+.profile-section .section-header h2 {
+    font-size: 20px;
+    font-weight: 500;
+    color: #3c4043;
+    margin: 0;
+}
+
+.profile-section .edit-link {
+    color: #1a73e8;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: opacity 0.3s ease;
+}
+
+.profile-section .edit-link:hover {
+    opacity: 0.8;
+}
+
+.profile-section .edit-link .material-icons {
+    font-size: 18px; /* Adjust icon size */
+}
+
+.profile-section .section-content p {
+    font-size: 15px;
+    color: #5f6368;
+    line-height: 1.6;
+    margin-bottom: 10px;
+}
+
+/* --- Contact Info Specifics --- */
+.contact-info .contact-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.contact-info .contact-item:last-child {
+    margin-bottom: 0;
+}
+
+.contact-info .contact-item .material-icons {
+    color: #5f6368;
+    margin-right: 15px;
+    font-size: 20px;
+}
+
+.contact-info .contact-item p {
+    margin: 0;
+    font-size: 15px;
+    color: #202124;
+}
+
+.contact-info .contact-item a {
+    color: #1a73e8;
+    text-decoration: none;
+}
+
+.contact-info .contact-item a:hover {
+    text-decoration: underline;
+}
+
+/* --- Skills Tags --- */
+.tags-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.tag {
+    background-color: #e8f0fe; /* Light blue background for tags */
+    color: #1a73e8; /* Blue text for tags */
+    padding: 8px 12px;
+    border-radius: 20px; /* Pill shape */
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+/* --- Experience & Education Lists --- */
+.experience-list,
+.education-list {
+    margin-top: 15px;
+}
+
+.experience-item,
+.education-item {
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px dashed #eee; /* Dashed separator */
+}
+
+.experience-item:last-child,
+.education-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.job-title, .degree {
+    font-size: 18px;
+    font-weight: 500;
+    color: #202124;
+    margin: 0 0 5px 0;
+}
+
+.company, .university {
+    font-size: 15px;
+    color: #5f6368;
+    margin: 0 0 5px 0;
+}
+
+.duration {
+    font-size: 14px;
+    color: #70757a;
+    margin: 0 0 10px 0;
+}
+
+.experience-item ul {
+    list-style-type: disc; /* Bullet points for responsibilities */
+    padding-left: 20px;
+    margin-top: 10px;
+    margin-bottom: 0;
+}
+
+.experience-item ul li {
+    font-size: 14px;
+    color: #5f6368;
+    margin-bottom: 5px;
+}
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 600px) {
+    .profile-container {
+        padding: 15px;
+        gap: 15px;
+    }
+
+    .card {
+        padding: 20px;
+    }
+
+    .profile-header {
+        padding-top: 0;
+        margin: 0; /* Remove negative margins from banner */
+    }
+
+    .profile-banner {
+        margin: -20px -20px 0 -20px; /* Adjust banner margins for smaller padding */
+        height: 100px;
+    }
+
+    .profile-picture-wrapper {
+        margin-top: -50px; /* Adjust picture pull-up */
+        border-width: 3px;
+        /* Sesuaikan width dan height untuk responsif agar tetap bulat */
+        width: 100px;
+        height: 100px;
+    }
+
+    .profile-picture {
+        width: 100%; /* Tetap 100% dari wrapper */
+        height: 100%; /* Tetap 100% dari wrapper */
+    }
+
+    .profile-name {
+        font-size: 28px;
+    }
+
+    .profile-tagline {
+        font-size: 14px;
+    }
+
+    .profile-actions {
+        flex-direction: column; /* Stack buttons vertically */
+        gap: 10px;
+    }
+
+    .material-button {
+        width: 100%; /* Make buttons full width */
+    }
+
+    .profile-section .section-header h2 {
+        font-size: 18px;
+    }
+
+    .profile-section .section-content p,
+    .contact-info .contact-item p,
+    .tag,
+    .job-title, .degree,
+    .company, .university,
+    .duration,
+    .experience-item ul li {
+        font-size: 14px;
+    }
+
+    .contact-info .contact-item .material-icons {
+        font-size: 18px;
+        margin-right: 10px;
+    }
+}
+</style>
+{/block}
+{block content}
+
+<section>
+
+    <div class="profile-container">
+
+        <div class="profile-header card">
+            <div class="profile-banner"></div>
+            <div class="profile-picture-wrapper">
+                <img src="https://plus.unsplash.com/premium_photo-1689977968861-9c91dbb16049?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8cHJvZmlsZSUyMHBpY3R1cmV8ZW58MHx8MHx8fDA%3D" alt="Profile Picture" class="profile-picture">
+            </div>
+            <h1 class="profile-name">John Doe</h1>
+            <p class="profile-tagline">Web Developer | UI/UX Enthusiast | Lifelong Learner</p>
+            <div class="profile-actions">
+                <button class="material-button edit-profile">Edit Profile</button>
+                <button class="material-button secondary">Share Profile</button>
+            </div>
+        </div>
+
+        <div class="profile-section card">
+            <div class="section-header">
+                <h2>About Me</h2>
+                <a href="#" class="edit-link"><span class="material-icons">edit</span></a>
+            </div>
+            <div class="section-content">
+                <p>Hello! I'm John Doe, a passionate web developer with 5+ years of experience in building responsive and user-friendly web applications. I specialize in front-end technologies like React and Vue.js, and have a strong understanding of backend development with Node.js.</p>
+            </div>
+        </div>
+
+        <div class="profile-section card">
+            <div class="section-header">
+                <h2>Contact Information</h2>
+                <a href="#" class="edit-link"><span class="material-icons">edit</span></a>
+            </div>
+            <div class="section-content contact-info">
+                <div class="contact-item">
+                    <span class="material-icons">email</span>
+                    <p>john.doe@example.com</p>
+                </div>
+                <div class="contact-item">
+                    <span class="material-icons">phone</span>
+                    <p>+62 812-3456-7890</p>
+                </div>
+                <div class="contact-item">
+                    <span class="material-icons">location_on</span>
+                    <p>Jakarta, Indonesia</p>
+                </div>
+                <div class="contact-item">
+                    <span class="material-icons">link</span>
+                    <p><a href="https://yourportfolio.com" target="_blank">yourportfolio.com</a></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="profile-section card">
+            <div class="section-header">
+                <h2>Skills</h2>
+                <a href="#" class="edit-link"><span class="material-icons">edit</span></a>
+            </div>
+            <div class="section-content tags-list">
+                <span class="tag">HTML5</span>
+                <span class="tag">CSS3</span>
+                <span class="tag">JavaScript (ES6+)</span>
+                <span class="tag">React.js</span>
+                <span class="tag">Node.js</span>
+                <span class="tag">Express.js</span>
+                <span class="tag">MongoDB</span>
+                <span class="tag">Git</span>
+                <span class="tag">RESTful APIs</span>
+                <span class="tag">Responsive Design</span>
+            </div>
+        </div>
+
+        <div class="profile-section card">
+            <div class="section-header">
+                <h2>Experience</h2>
+                <a href="#" class="edit-link">
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-plus"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 5l0 14" /><path d="M5 12l14 0" /></svg>
+                </a>
+            </div>
+            <div class="section-content experience-list">
+                <div class="experience-item">
+                    <h3 class="job-title">Senior Web Developer</h3>
+                    <p class="company">Tech Innovators Inc.</p>
+                    <p class="duration">Jan 2022 - Present</p>
+                    <ul>
+                        <li>Led development of responsive e-commerce platform.</li>
+                        <li>Mentored junior developers and conducted code reviews.</li>
+                        <li>Implemented new features, improving user engagement by 20%.</li>
+                    </ul>
+                </div>
+                <div class="experience-item">
+                    <h3 class="job-title">Junior Front-End Developer</h3>
+                    <p class="company">Creative Solutions Co.</p>
+                    <p class="duration">Mar 2019 - Dec 2021</p>
+                    <ul>
+                        <li>Developed UI components using React.js.</li>
+                        <li>Collaborated with design team to ensure pixel-perfect implementation.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="profile-section card">
+            <div class="section-header">
+                <h2>Education</h2>
+                <a href="#" class="edit-link">
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-plus"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 5l0 14" /><path d="M5 12l14 0" /></svg>
+                </a>
+            </div>
+            <div class="section-content education-list">
+                <div class="education-item">
+                    <h3 class="degree">Bachelor of Computer Science</h3>
+                    <p class="university">University of Indonesia</p>
+                    <p class="duration">2015 - 2019</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</section>
+
+{/block}
+{block js}
+<script n:syntax="off">
+
+</script>
+{/block}

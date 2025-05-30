@@ -1,0 +1,528 @@
+{layout '../main.latte'}
+{block title}{$title}{/block}
+{block css}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<style>
+/* Global Styles & Font */
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f2f5;
+    color: #202124;
+    box-sizing: border-box;
+    overflow-x: hidden; /* Mencegah scrollbar horizontal saat sidebar tersembunyi */
+}
+
+/* Page Wrapper untuk mengelola layout utama */
+.page-wrapper {
+    display: flex;
+    flex-direction: column; /* Konten utama di bawah navbar */
+    min-height: 100vh;
+}
+
+/* --- Navbar Styles (dari contoh sebelumnya) --- */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ffffff;
+    height: 64px;
+    padding: 0 24px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.12);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    box-sizing: border-box;
+    transition: left 0.3s ease; /* Transisi untuk navbar saat sidebar terbuka */
+}
+
+.navbar-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.menu-toggle-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s ease;
+}
+
+.menu-toggle-btn:hover {
+    background-color: #f0f0f0;
+}
+
+.menu-toggle-btn svg {
+    font-size: 24px;
+    color: #5f6368;
+}
+
+.logo-link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+.google-logo {
+    height: 24px;
+    width: auto;
+}
+
+.product-name {
+    font-size: 22px;
+    color: #5f6368;
+    margin-left: 8px;
+    font-weight: 400;
+    white-space: nowrap;
+}
+
+.navbar-center {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.search-box {
+    background-color: #f1f3f4;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    width: 100%;
+    max-width: 600px;
+    border: 1px solid transparent;
+    transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.search-box:focus-within {
+    background-color: #ffffff;
+    border-color: #dadce0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.search-box svg {
+    color: #5f6368;
+    font-size: 24px;
+    margin-right: 8px;
+}
+
+.search-box input[type="text"] {
+    flex-grow: 1;
+    border: none;
+    outline: none;
+    background: none;
+    font-size: 16px;
+    color: #202124;
+    padding: 0;
+}
+
+.search-box input[type="text"]::placeholder {
+    color: #80868b;
+}
+
+.voice-search-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s ease;
+    margin-left: 8px;
+}
+
+.voice-search-btn:hover {
+    background-color: #e8e8e8;
+}
+
+.voice-search-btn svg {
+    font-size: 24px;
+    color: #5f6368;
+}
+
+.navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.icon-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s ease;
+}
+
+.icon-button:hover {
+    background-color: #f0f0f0;
+}
+
+.icon-button svg {
+    font-size: 24px;
+    color: #5f6368;
+}
+
+.avatar-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.2s ease;
+}
+
+.avatar-button:hover {
+    opacity: 0.8;
+}
+
+.avatar-button img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+/* --- Sidebar Styles --- */
+.sidebar {
+    width: 256px; /* Lebar sidebar */
+    background-color: #ffffff;
+    position: fixed;
+    top: 0;
+    left: -256px; /* Sembunyikan di luar layar */
+    height: 100%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Shadow lebih kuat dari navbar */
+    z-index: 1100; /* Lebih tinggi dari navbar */
+    transition: left 0.3s ease; /* Transisi slide-in/out */
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    padding-top: 64px; /* Padding agar tidak tumpang tindih dengan header */
+    overflow-y: auto; /* Agar sidebar bisa di-scroll */
+}
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    height: 64px; /* Tinggi sama dengan navbar */
+    padding: 0 24px;
+    position: absolute; /* Header tetap di atas saat scroll */
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #ffffff; /* Pastikan background-nya putih */
+    box-sizing: border-box;
+}
+
+.close-sidebar-btn {
+    margin-left: -8px; /* Sedikit geser ke kiri untuk penataan */
+}
+
+.sidebar-nav {
+    list-style: none;
+    padding: 8px 0;
+    margin: 0;
+}
+
+.nav-item {
+    padding: 0 16px;
+    margin-bottom: 2px;
+}
+
+.nav-item a {
+    display: flex;
+    align-items: center;
+    padding: 10px 16px;
+    border-radius: 999px; /* Bentuk pil untuk item aktif/hover */
+    text-decoration: none;
+    color: #202124;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.nav-item a svg {
+    font-size: 20px;
+    color: #5f6368; /* Warna ikon abu-abu */
+    margin-right: 20px;
+}
+
+.nav-item a span:last-child { /* Teks navigasi */
+    white-space: nowrap;
+}
+
+.nav-item a:hover {
+    background-color: #f0f2f5; /* Background abu-abu muda saat hover */
+}
+
+.nav-item.active a {
+    background-color: #e8f0fe; /* Background biru muda saat aktif */
+    color: #1a73e8; /* Teks biru Google saat aktif */
+}
+
+.nav-item.active a svg {
+    color: #1a73e8; /* Ikon biru Google saat aktif */
+}
+
+.nav-item.separator {
+    border-top: 1px solid #e0e0e0;
+    margin: 16px 0;
+    padding: 0;
+}
+
+/* Sidebar Overlay */
+.sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4); /* Overlay gelap */
+    backdrop-filter: blur(2px); /* Efek blur (modern browsers) */
+    z-index: 1050; /* Di antara navbar dan sidebar */
+    opacity: 0;
+    visibility: hidden; /* Sembunyikan overlay default */
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+/* Kelas untuk mengontrol status sidebar (ditambahkan oleh JS) */
+body.sidebar-open .sidebar {
+    left: 0; /* Geser sidebar ke dalam */
+}
+
+body.sidebar-open .navbar {
+    /* Optional: Geser navbar juga agar konten terasa bergerak bersama */
+    /* left: 256px; */
+    /* width: calc(100% - 256px); */
+}
+
+body.sidebar-open .main-content {
+    /* Optional: Geser konten utama juga */
+    /* margin-left: 256px; */
+}
+
+body.sidebar-open .sidebar-overlay {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Main Content (perlu padding-top agar tidak tertutup navbar) */
+.main-content {
+    flex-grow: 1;
+    padding-left: 24px; /* Padding kiri agar tidak terlalu mepet */
+    padding-right: 24px;
+    transition: margin-left 0.3s ease; /* Untuk transisi saat sidebar terbuka */
+}
+
+/* Responsiveness */
+@media (max-width: 768px) {
+    .navbar {
+        padding: 0 16px;
+    }
+
+    .navbar-center {
+        display: none;
+    }
+
+    .product-name {
+        display: none;
+    }
+
+    .navbar-left {
+        gap: 8px;
+    }
+
+    .navbar-right {
+        gap: 4px;
+    }
+    
+    .icon-button {
+        padding: 4px;
+    }
+
+    /* Sidebar di mobile akan overlay penuh atau sebagian */
+    .sidebar {
+        width: 80%; /* Lebar sidebar di mobile */
+        max-width: 300px; /* Batasi lebar agar tidak terlalu besar */
+        left: -80%; /* Sembunyikan di luar layar */
+        box-shadow: 0 0 10px rgba(0,0,0,0.3); /* Shadow sedikit berbeda */
+    }
+
+    .sidebar-header {
+        background-color: #ffffff; /* Pastikan header sidebar selalu putih */
+    }
+
+    .sidebar-overlay {
+        /* Overlay tetap penuh di mobile */
+    }
+
+    /* Di mobile, konten tidak digeser, hanya overlay yang muncul */
+    body.sidebar-open .main-content {
+        margin-left: 0;
+    }
+
+    body.sidebar-open .navbar {
+        left: 0;
+    }
+}
+</style>
+{/block}
+{block content}
+
+<section>
+
+<div class="page-wrapper">
+        <nav class="navbar">
+            <div class="navbar-left">
+                <button class="menu-toggle-btn" aria-label="Toggle navigation menu">
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-menu-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 6l16 0" /><path d="M4 12l16 0" /><path d="M4 18l16 0" /></svg>
+                </button>
+                <a href="#" class="logo-link">
+                    <img src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" alt="Google" class="google-logo">
+                </a>
+            </div>
+
+            <div class="navbar-center">
+                <div class="search-box">
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-search"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
+                    <input type="text" placeholder="Telusuri di Drive">
+                    <button class="voice-search-btn" aria-label="Voice search">
+                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-microphone"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 2m0 3a3 3 0 0 1 3 -3h0a3 3 0 0 1 3 3v5a3 3 0 0 1 -3 3h0a3 3 0 0 1 -3 -3z" /><path d="M5 10a7 7 0 0 0 14 0" /><path d="M8 21l8 0" /><path d="M12 17l0 4" /></svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="navbar-right">
+                <button class="icon-button" aria-label="Support">
+                <button class="icon-button" aria-label="Google apps">
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-bell"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 5a2 2 0 1 1 4 0a7 7 0 0 1 4 6v3a4 4 0 0 0 2 3h-16a4 4 0 0 0 2 -3v-3a7 7 0 0 1 4 -6" /><path d="M9 17v1a3 3 0 0 0 6 0v-1" /></svg>
+                </button>
+                <button class="avatar-button" aria-label="Google Account: Your Name">
+                    <img src="https://media.istockphoto.com/id/1398385367/photo/happy-millennial-business-woman-in-glasses-posing-with-hands-folded.jpg?s=612x612&w=0&k=20&c=Wd2vTDd6tJ5SeEY-aw0WL0bew8TAkyUGVvNQRj3oJFw=" alt="Profile Picture">
+                </button>
+            </div>
+        </nav>
+
+        <div id="sidebar" class="sidebar">
+            <div class="sidebar-header">
+                <button class="menu-toggle-btn close-sidebar-btn" aria-label="Close navigation menu">
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-menu-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 6l16 0" /><path d="M4 12l16 0" /><path d="M4 18l16 0" /></svg>
+                </button>
+                <a href="#" class="logo-link">
+                    <img src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" alt="Google" class="google-logo">
+                </a>
+            </div>
+            <ul class="sidebar-nav">
+                <li class="nav-item active">
+                    <a href="#">
+                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-home"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l-2 0l9 -9l9 9l-2 0" /><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" /><path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" /></svg>
+                        <span>Beranda</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#">
+                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-server"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 4m0 3a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v2a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3z" /><path d="M3 12m0 3a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v2a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3z" /><path d="M7 8l0 .01" /><path d="M7 16l0 .01" /></svg>
+                        <span>Drive Saya</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#">
+                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-share"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6 12m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" /><path d="M18 6m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" /><path d="M18 18m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" /><path d="M8.7 10.7l6.6 -3.4" /><path d="M8.7 13.3l6.6 3.4" /></svg>
+                        <span>Dibagikan kepada saya</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#">
+                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-star"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z" /></svg>
+                        <span>Berbintang</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#">
+                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-trash"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 7l16 0" /><path d="M10 11l0 6" /><path d="M14 11l0 6" /><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" /><path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" /></svg>
+                        <span>Sampah</span>
+                    </a>
+                </li>
+                <li class="nav-item separator"></li> <li class="nav-item">
+                    <a href="#">
+                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-cloud"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6.657 18c-2.572 0 -4.657 -2.007 -4.657 -4.483c0 -2.475 2.085 -4.482 4.657 -4.482c.393 -1.762 1.794 -3.2 3.675 -3.773c1.88 -.572 3.956 -.193 5.444 1c1.488 1.19 2.162 3.007 1.77 4.769h.99c1.913 0 3.464 1.56 3.464 3.486c0 1.927 -1.551 3.487 -3.465 3.487h-11.878" /></svg>
+                        <span>Penyimpanan</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div id="sidebar-overlay" class="sidebar-overlay"></div>
+
+        <main class="main-content" style="padding-top: 80px;">
+            <h2>Konten Halaman Utama</h2>
+            <p>Ini adalah area konten utama di bawah navbar.</p>
+            <p>Klik ikon menu di kiri atas untuk membuka sidebar.</p>
+            <div style="height: 1000px; background-color: #e3e7ed; margin-top: 20px; display: flex; align-items: center; justify-content: center; color: #5f6368;">
+                <p>Gulir ke bawah untuk melihat bagaimana navbar tetap di atas.</p>
+            </div>
+        </main>
+    </div>
+
+</section>
+
+{/block}
+{block js}
+<script n:syntax="off">
+document.addEventListener('DOMContentLoaded', () => {
+    const menuToggleBtn = document.querySelector('.menu-toggle-btn');
+    const closeSidebarBtn = document.querySelector('.close-sidebar-btn');
+    const sidebarOverlay = document.getElementById('sidebar-overlay');
+    const body = document.body;
+
+    // Fungsi untuk membuka sidebar
+    function openSidebar() {
+        body.classList.add('sidebar-open');
+    }
+
+    // Fungsi untuk menutup sidebar
+    function closeSidebar() {
+        body.classList.remove('sidebar-open');
+    }
+
+    // Event listener untuk tombol menu di navbar
+    menuToggleBtn.addEventListener('click', openSidebar);
+
+    // Event listener untuk tombol close di sidebar header
+    closeSidebarBtn.addEventListener('click', closeSidebar);
+
+    // Event listener untuk overlay (klik di luar sidebar)
+    sidebarOverlay.addEventListener('click', closeSidebar);
+
+    // Opsional: Menutup sidebar dengan tombol ESC
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && body.classList.contains('sidebar-open')) {
+            closeSidebar();
+        }
+    });
+});
+</script>
+{/block}

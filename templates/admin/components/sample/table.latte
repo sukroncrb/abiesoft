@@ -1,0 +1,287 @@
+{layout '../main.latte'}
+{block title}{$title}{/block}
+{block css}
+<link rel="stylesheet" href="form-style.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f4f6f9; /* Light background similar to Google products */
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    margin: 0;
+    padding: 30px 20px;
+    box-sizing: border-box;
+}
+
+.table-container {
+    background-color: #ffffff;
+    border-radius: 8px; /* Subtle rounded corners */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Slight elevation */
+    padding: 20px;
+    width: 100%;
+    max-width: 900px; /* Max width for better readability */
+    overflow-x: auto; /* Enable horizontal scroll on small screens */
+    box-sizing: border-box;
+}
+
+.table-title {
+    font-size: 24px;
+    font-weight: 500;
+    color: #3c4043;
+    margin-top: 0;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.google-table {
+    width: 100%;
+    border-collapse: collapse; /* Collapse borders for a clean look */
+    /* No outer border on the table itself, relies on container shadow */
+}
+
+/* Table Header */
+.google-table thead th {
+    background-color: #f8f9fa; /* Lighter background for header */
+    color: #5f6368; /* Grey text for headers */
+    font-size: 14px;
+    font-weight: 500; /* Medium weight for header text */
+    text-align: left; /* Default text alignment */
+    padding: 12px 16px;
+    border-bottom: 1px solid #dadce0; /* Subtle bottom border */
+    position: sticky; /* Sticky header for scrolling tables */
+    top: 0;
+    z-index: 1; /* Ensure header stays on top */
+}
+
+/* Numeric columns in header should be right-aligned */
+.google-table thead th.numeric {
+    text-align: right;
+}
+
+/* Table Body Rows */
+.google-table tbody tr {
+    border-bottom: 1px solid #e8eaed; /* Subtle bottom border for rows */
+    transition: background-color 0.2s ease-in-out; /* Smooth hover effect */
+}
+
+/* Remove bottom border from the last row */
+.google-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+/* Row hover effect */
+.google-table tbody tr:hover {
+    background-color: #e6f4ea; /* Light green for hover (or any subtle color) */
+    cursor: pointer; /* Indicate interactivity */
+}
+
+/* Table Data Cells */
+.google-table tbody td {
+    padding: 12px 16px;
+    font-size: 15px;
+    color: #202124; /* Dark grey for content text */
+    text-align: left; /* Default text alignment */
+}
+
+/* Numeric columns in body should be right-aligned */
+.google-table tbody td.numeric {
+    text-align: right;
+    font-feature-settings: "tnum"; /* Tabular lining numbers for consistent width */
+    font-variant-numeric: tabular-nums;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .table-container {
+        padding: 15px;
+    }
+
+    .google-table thead {
+        /* Hide header on small screens if you want a card-like list view */
+        /* display: none; */
+    }
+
+    .google-table, .google-table tbody, .google-table tr, .google-table td {
+        display: block; /* Stack table cells */
+        width: 100%;
+    }
+
+    .google-table tr {
+        margin-bottom: 15px;
+        border: 1px solid #e8eaed;
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        background-color: #ffffff;
+    }
+
+    .google-table td {
+        text-align: right !important; /* Force text to right for stacked cells */
+        padding: 10px 15px;
+        position: relative; /* For the data-title pseudo-element */
+    }
+
+    .google-table td::before {
+        content: attr(data-label); /* Use data-label for the "header" on mobile */
+        position: absolute;
+        left: 15px;
+        width: 45%; /* Adjust width for the label */
+        font-weight: 500;
+        color: #5f6368;
+        text-align: left;
+    }
+
+    /* Adjust padding for numeric columns */
+    .google-table td.numeric::before {
+        text-align: left;
+    }
+}
+</style>
+{/block}
+{block content}
+
+<section>
+
+    <div class="table-container">
+        <h2 class="table-title">Product Inventory</h2>
+        <table class="google-table">
+            <thead>
+                <tr>
+                    <th class="column-name">Product ID</th>
+                    <th class="column-name">Product Name</th>
+                    <th class="column-name numeric">Price (IDR)</th>
+                    <th class="column-name numeric">Stock</th>
+                    <th class="column-name">Category</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>P001</td>
+                    <td>Laptop Pro X</td>
+                    <td class="numeric">15.000.000</td>
+                    <td class="numeric">25</td>
+                    <td>Electronics</td>
+                </tr>
+                <tr>
+                    <td>P002</td>
+                    <td>Wireless Mouse G2</td>
+                    <td class="numeric">250.000</td>
+                    <td class="numeric">150</td>
+                    <td>Accessories</td>
+                </tr>
+                <tr>
+                    <td>P003</td>
+                    <td>Mechanical Keyboard RGB</td>
+                    <td class="numeric">1.200.000</td>
+                    <td class="numeric">40</td>
+                    <td>Accessories</td>
+                </tr>
+                <tr>
+                    <td>P004</td>
+                    <td>External SSD 1TB</td>
+                    <td class="numeric">1.800.000</td>
+                    <td class="numeric">70</td>
+                    <td>Storage</td>
+                </tr>
+                <tr>
+                    <td>P005</td>
+                    <td>Monitor 27-inch 4K</td>
+                    <td class="numeric">6.500.000</td>
+                    <td class="numeric">15</td>
+                    <td>Electronics</td>
+                </tr>
+                <tr>
+                    <td>P006</td>
+                    <td>USB-C Hub Multiport</td>
+                    <td class="numeric">400.000</td>
+                    <td class="numeric">100</td>
+                    <td>Accessories</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</section>
+
+{/block}
+{block js}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // Handle floating labels for input and textarea
+    const formGroups = document.querySelectorAll('.form-group');
+
+    formGroups.forEach(group => {
+        const input = group.querySelector('input, textarea');
+        const label = group.querySelector('label');
+
+        if (input && label) {
+            // Function to update label position
+            const updateLabel = () => {
+                if (input.value.length > 0 || input === document.activeElement) {
+                    label.classList.add('active'); // Add a class to move the label
+                } else {
+                    label.classList.remove('active'); // Remove to move back
+                }
+            };
+
+            // Initial check on page load (e.g., if form fields are pre-filled by browser)
+            updateLabel();
+
+            // Listen for input and focus events
+            input.addEventListener('input', updateLabel);
+            input.addEventListener('focus', updateLabel);
+            input.addEventListener('blur', updateLabel); // When user leaves the field
+        }
+    });
+
+    // Handle floating label for select
+    const selectElements = document.querySelectorAll('.select-group select');
+
+    selectElements.forEach(select => {
+        const label = select.previousElementSibling; // Assuming label is right before select
+
+        // Initial check
+        if (select.value && select.value !== "") {
+            select.classList.add('has-value');
+            if (label && label.tagName.toLowerCase() === 'label') {
+                label.classList.add('active');
+            }
+        }
+
+        select.addEventListener('change', () => {
+            if (select.value && select.value !== "") {
+                select.classList.add('has-value');
+                if (label && label.tagName.toLowerCase() === 'label') {
+                    label.classList.add('active');
+                }
+            } else {
+                select.classList.remove('has-value');
+                if (label && label.tagName.toLowerCase() === 'label') {
+                    label.classList.remove('active');
+                }
+            }
+        });
+
+        // For focus/blur of select to also trigger label animation
+        select.addEventListener('focus', () => {
+            if (label && label.tagName.toLowerCase() === 'label') {
+                label.classList.add('active');
+            }
+        });
+
+        select.addEventListener('blur', () => {
+             // Only move label back if no value is selected AND it's not focused
+            if (!select.value && select.value === "") {
+                if (label && label.tagName.toLowerCase() === 'label') {
+                    label.classList.remove('active');
+                }
+            }
+        });
+    });
+});
+</script>
+{/block}

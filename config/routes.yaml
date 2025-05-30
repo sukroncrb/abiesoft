@@ -16,6 +16,12 @@ admin:
       controller: HomeController
       function: index
       middleware: admin,user
+    /admin/seting: 
+      method: get
+      controller: SetingController
+      function: index
+      middleware: admin,user
+  
 
 
 
