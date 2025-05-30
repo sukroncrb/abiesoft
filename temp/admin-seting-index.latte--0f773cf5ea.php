@@ -22,7 +22,7 @@ final class Template_0f773cf5ea extends Latte\Runtime\Template
 		$this->renderBlock('css', get_defined_vars()) /* line 3 */;
 		$this->renderBlock('content', get_defined_vars()) /* line 4 */;
 		$this->renderBlock('modal', get_defined_vars()) /* line 90 */;
-		$this->renderBlock('js', get_defined_vars()) /* line 127 */;
+		$this->renderBlock('js', get_defined_vars()) /* line 133 */;
 	}
 
 
@@ -81,7 +81,7 @@ final class Template_0f773cf5ea extends Latte\Runtime\Template
                             <p>ID ini digenerate secara otomatis saat anda mendaftar.</p>
                         </div>
                         <div class="setting-control">
-                            <p class="plain-text">USER123456789</p>
+                            <p class="plain-text">USER-c65161ff-3820-4a7b-abc2-7c6011a6fb8b</p>
                         </div>
                     </div>
                     <div class="setting-item">
@@ -146,38 +146,56 @@ final class Template_0f773cf5ea extends Latte\Runtime\Template
 	/** {block modal} on line 90 */
 	public function blockModal(array $ʟ_args): void
 	{
+		extract($this->params);
+		extract($ʟ_args);
+		unset($ʟ_args);
+
 		echo '<div id="modalEmail" class="modal">
     <div class="modal-content">
-        <div class="modal-header">
-            <h2>Ganti Email</h2>
-            <span class="close-button">&times;</span>
-        </div>
-        <div class="modal-body">
-            <label for="email">Email baru:</label>
-            <input type="text" id="email" name="email" placeholder="Email baru anda">
-        </div>
-        <div class="modal-footer">
-            <button class="modal-button cancel-button">Batal</button>
-            <button class="modal-button primary-button">Simpan Perubahan</button>
-        </div>
+        <form method="post" id="';
+		echo LR\Filters::escapeHtmlAttr($formemailid) /* line 93 */;
+		echo '" data-action="formEmail">
+            <div class="modal-header">
+                <h2>Ganti Email</h2>
+                <span class="close-button">&times;</span>
+            </div>
+            <div class="modal-body">
+                <label for="email">Email baru:</label>
+                <input type="text" id="email" name="email" placeholder="Email baru anda">
+            </div>
+            <div class="modal-footer">
+                <input type="hidden" id="csrf" name="csrf" value="';
+		echo LR\Filters::escapeHtmlAttr($csrfemail) /* line 103 */;
+		echo '">
+                <button type="button" class="modal-button cancel-button">Batal</button>
+                <button class="modal-button primary-button">Simpan Perubahan</button>
+            </div>
+        </form>
     </div>
 </div>
 
 <div id="modalPassword" class="modal">
     <div class="modal-content">
-        <div class="modal-header">
-            <h2>Ganti Password</h2>
-            <span class="close-button">&times;</span>
-        </div>
-        <div class="modal-body">
-            <label for="passwordbaru">Password baru:</label>
-            <input type="text" id="passwordbaru" name="passwordbaru" placeholder="Password baru anda">
-            <label for="ulangi">Ulangi Password:</label>
-            <input type="text" id="ulangi" name="ulangi" placeholder="Masukan ulang">
-        </div>
-        <div class="modal-footer">
-            <button class="modal-button cancel-button">Batal</button>
-            <button class="modal-button primary-button">Simpan Perubahan</button>
+        <form method="post" id="';
+		echo LR\Filters::escapeHtmlAttr($formpasswordid) /* line 113 */;
+		echo '" data-action="formPassword">
+            <div class="modal-header">
+                <h2>Ganti Password</h2>
+                <span class="close-button">&times;</span>
+            </div>
+            <div class="modal-body">
+                <label for="passwordbaru">Password baru:</label>
+                <input type="text" id="passwordbaru" name="passwordbaru" placeholder="Password baru anda">
+                <label for="ulangi">Ulangi Password:</label>
+                <input type="text" id="ulangi" name="ulangi" placeholder="Masukan ulang">
+            </div>
+            <div class="modal-footer">
+                <input type="hidden" id="csrf" name="csrf" value="';
+		echo LR\Filters::escapeHtmlAttr($csrfpassword) /* line 125 */;
+		echo '">
+                <button type="button" class="modal-button cancel-button">Batal</button>
+                <button class="modal-button primary-button">Simpan Perubahan</button>
+            </div>
         </div>
     </div>
 </div>
@@ -185,7 +203,7 @@ final class Template_0f773cf5ea extends Latte\Runtime\Template
 	}
 
 
-	/** {block js} on line 127 */
+	/** {block js} on line 133 */
 	public function blockJs(array $ʟ_args): void
 	{
 		extract($this->params);
@@ -250,6 +268,77 @@ document.addEventListener(\'DOMContentLoaded\', () => {
 
 
 });
+
+
+async function formEmail() {
+    Toast({
+        tipe: "success",
+        pesan: "Form Email Submited"
+    });
+    
+    /*
+        console.log(token);
+        const formData = new FormData(formulir);
+        formData.append("fid", formulir.id);
+
+        try {
+            const response = await fetch(\'http://127.0.0.1:8154/api/test\', {
+                method: \'POST\',
+                headers: {
+                    \'Authorization\': `Bearer ${token}`,
+                },
+                body: formData
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+            }
+
+            const result = await response.json();
+            console.log(result);
+
+        } catch (error) {
+            console.error(\'Ada masalah dengan operasi fetch:\', error);
+        }
+
+    */
+}
+
+async function formPassword() {
+    Toast({
+        tipe: "error",
+        pesan: "Form Password Submited"
+    });
+    
+    /*
+        console.log(token);
+        const formData = new FormData(formulir);
+        formData.append("fid", formulir.id);
+
+        try {
+            const response = await fetch(\'http://127.0.0.1:8154/api/test\', {
+                method: \'POST\',
+                headers: {
+                    \'Authorization\': `Bearer ${token}`,
+                },
+                body: formData
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+            }
+
+            const result = await response.json();
+            console.log(result);
+
+        } catch (error) {
+            console.error(\'Ada masalah dengan operasi fetch:\', error);
+        }
+
+    */
+}
 </script>
 ';
 	}

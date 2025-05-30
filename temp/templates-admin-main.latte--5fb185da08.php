@@ -83,14 +83,15 @@ final class Template_5fb185da08 extends Latte\Runtime\Template
 
 ';
 		$this->renderBlock('modal', get_defined_vars()) /* line 44 */;
-		echo '    <div data-token="';
-		echo LR\Filters::escapeHtmlAttr($app['bearer']) /* line 45 */;
+		echo '    <div class="message-container"></div>
+    <div data-token="';
+		echo LR\Filters::escapeHtmlAttr($app['bearer']) /* line 46 */;
 		echo '"></div>
     <script src="';
-		echo LR\Filters::escapeHtmlAttr(LR\Filters::safeUrl($baseurl)) /* line 46 */;
+		echo LR\Filters::escapeHtmlAttr(LR\Filters::safeUrl($baseurl)) /* line 47 */;
 		echo '/assets/admin/js/style.js"></script>
 ';
-		$this->renderBlock('js', get_defined_vars()) /* line 47 */;
+		$this->renderBlock('js', get_defined_vars()) /* line 48 */;
 		echo '
 </body>
 
@@ -122,7 +123,7 @@ final class Template_5fb185da08 extends Latte\Runtime\Template
 	}
 
 
-	/** {block js} on line 47 */
+	/** {block js} on line 48 */
 	public function blockJs(array $ʟ_args): void
 	{
 	}

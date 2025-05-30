@@ -1334,3 +1334,93 @@ input:checked + .slider:before {
 
 
 
+
+
+
+
+
+
+
+
+/*
+
+
+
+
+
+
+
+
+    Message
+*/
+
+.message-container {
+    position: fixed; /* Atau 'absolute' jika ingin dalam konteks elemen tertentu */
+    bottom: 20px; /* Di bagian bawah layar */
+    /* top: 20px; jika ingin di atas */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 400px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.message-status {
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
+    border-radius: 8px; /* Sudut membulat */
+    color: #fff;
+    font-size: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow halus */
+    opacity: 0; /* Awalnya sembunyi */
+    transform: translateY(20px); /* Awalnya sedikit di bawah */
+    transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+}
+
+.message-status.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.message-status svg {
+    margin-right: 10px;
+    font-size: 24px;
+}
+
+.message-status p {
+    margin: 0;
+    flex-grow: 1; /* Agar pesan mengambil sisa ruang */
+}
+
+/* Warna untuk setiap status */
+.message-status.success {
+    background-color: #34A853; /* Google Green */
+}
+
+.message-status.error {
+    background-color: #EA4335; /* Google Red */
+}
+
+.message-status.info {
+    background-color: #4285F4; /* Google Blue */
+}
+
+.message-status.warning {
+    background-color: #FBBC04; /* Google Yellow/Orange */
+    color: #333; /* Teks gelap agar kontras */
+}
+
+
+
+
+
+
+
+
+
+
+
