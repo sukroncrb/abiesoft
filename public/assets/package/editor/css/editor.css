@@ -1,0 +1,242 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700;800&display=swap');
+
+.opsi-button-area {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    font-family: Roboto;
+    height: 190px;
+    background-color: #f7fafc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.button-area {
+    width: 100%;
+    margin: 0 20px;
+    padding: 5px 10px;
+    border-radius: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f0f4fa;
+}
+
+.button-area .sparator {
+    display: block;
+    width: 2px;
+    height: 100%;
+    margin: 0 5px;
+    border-left: 1px solid #c7c7c7;
+}
+
+.button-area button,
+.button-area select {
+    height: 33px;
+    background: none;
+    border-radius: 5px;
+    padding: 7px 5px;
+    border: none;
+    outline: none;
+    margin: 0 2px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.button-area button:hover,
+.button-area select:hover  {
+    background-color: #e5e7eb;
+}
+
+.button-area button.active,
+.button-area select.active  {
+    background-color: #d3e3fd;
+}
+
+.button-area button > svg {
+    height: 17px;
+}
+
+.flex-between {
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+.option-btn {
+    display: block;
+}
+
+@media (width >= 40rem) { 
+    .flex-between {
+        display: none;
+    }
+    .option-btn {
+        display: block;
+    }
+}
+
+@media (width >= 48rem) { 
+    .flex-between {
+        display: none;
+    }
+    .option-btn {
+        display: block;
+    }
+}
+
+@media (width >= 64rem) { 
+    .flex-between {
+        display: flex;
+    }
+    .option-btn {
+        display: none;
+    }
+}
+
+@media (width >= 80rem) { 
+    .flex-between {
+        display: flex;
+    }
+    .option-btn {
+        display: none;
+    }
+}
+
+@media (width >= 96rem) { 
+    .flex-between {
+        display: flex;
+    }
+    .option-btn {
+        display: none;
+    }
+}
+
+.stage {
+    position: fixed;
+    overflow: auto;
+    top: 130px;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f7fafc;
+    border-top: 1px solid #c7c7c7;
+    border-bottom: 1px solid #c7c7c7;
+}
+
+.stage::-webkit-scrollbar {
+    width: 14px;
+    background-color: none;
+}
+
+.stage::-webkit-scrollbar-track {
+    background-color: none;
+}
+
+.stage::-webkit-scrollbar-thumb {
+    width: auto;
+    border-radius: 8px;
+    border-right: 3px solid #f7fafc;
+    border-left: 3px solid #f7fafc;
+    background-color: #dadce0;
+}
+
+.editor-container {
+    width: 21cm; /* Lebar A4 */
+    min-height: 29.7cm; /* Tinggi A4 */
+    background-color: white;
+    border: 1px solid #c7c7c7;
+    margin: 20px auto;
+    padding: 2cm; /* Margin konten di dalam "halaman" */
+    box-sizing: border-box; /* Padding disertakan dalam lebar/tinggi */
+    zoom: 100%;
+}
+
+/* Styling untuk area yang dapat diedit */
+[contenteditable="true"] {
+    outline: none; /* Hilangkan outline default saat fokus */
+    min-height: 100%; /* Pastikan mengisi container */
+    line-height: 1.5;
+    font-size: 11pt;
+    /* Tambahkan styling dasar untuk paragraf, heading, dll. */
+}
+
+#editorContent ul,
+#editorContent ol {
+    margin: 10px 0;
+    padding-left: 25px;
+}
+
+/* --- CSS untuk Cetak --- */
+@media print {
+
+    .opsi-button-area {
+        display: none;
+    }
+
+    .stage {
+        position: unset;
+        overflow: unset;
+        top: unset;
+        right: unset;
+        bottom: unset;
+        left: unset;
+        font-family: unset;
+        border-top: unset;
+        border-bottom: unset;
+        margin: 0;
+        padding: 0;
+        background-color: white;
+    }
+
+    .editor-container {
+        width: auto;
+        border: none;
+        min-height: auto;
+        box-shadow: none;
+        margin: 0;
+        padding: 0;
+        zoom: 100%;
+    }
+
+    /* Aturan @page untuk mengatur ukuran kertas dan margin saat mencetak */
+    @page {
+        size: A4 portrait;
+        margin: 2.5cm;
+        /* @top-center { content: "My Document"; }
+        @bottom-right { content: counter(page); */
+    }
+
+    /* Hindari pemotongan elemen di tengah halaman */
+    p, h1, h2, h3, ul, ol, table, img {
+        page-break-inside: avoid;
+    }
+
+    /* Paksa paragraf tertentu atau elemen dengan kelas ini untuk memulai halaman baru */
+    .page-break {
+        page-break-before: always;
+    }
+
+    .container {
+        display: unset;
+        margin-top: unset;
+    }
+
+    .main-content {
+        flex-grow: unset;
+        padding: unset;
+        margin-left: unset;
+        transition: unset;
+        background-color: unset;
+        min-height: unset;
+    }
+
+    .navbar,
+    .sidebar {
+        display: none;
+    }
+
+}

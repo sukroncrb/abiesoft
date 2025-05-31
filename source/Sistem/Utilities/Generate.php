@@ -69,7 +69,9 @@ class Generate {
 
     public static function formID($class): string
     {
-        $result = "form-".substr(sha1($class),0,8);
+        $cf = Cookies::lihat("_cf",);
+        $kode = Reader::secretCode($cf, Reader::env('SECRET_KEY'))['inisial'];
+        $result = "form-".sha1($class.$kode);
         return $result;
     }
 

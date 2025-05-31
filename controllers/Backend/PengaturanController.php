@@ -5,7 +5,7 @@ namespace App\Controller\Backend;
 use Sukroncrb2025\Abiesoft\Sistem\Http\Controller;
 use Sukroncrb2025\Abiesoft\Sistem\Utilities\Generate;
 
-class SetingController extends Controller 
+class PengaturanController extends Controller 
 {
 
     public function index()
@@ -16,7 +16,7 @@ class SetingController extends Controller
 
         $this->view(
             model:'backend',
-            template:'seting/index',
+            template:'pengaturan/index',
             data: [
                 'title' => 'Seting',
                 'formemailid' => $formemailid,

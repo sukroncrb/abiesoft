@@ -1,0 +1,13 @@
+{layout '../main.latte'}
+{block title}{$title}{/block}
+{block css}
+<link rel="stylesheet" href="{$baseurl}/assets/package/editor/css/editor.css" />
+{/block}
+{block content}
+<div class="main-content">
+    {include "./frame/editor.latte"}
+</div>
+{/block}
+{block js}
+<script src="{$baseurl}/assets/package/editor/js/editor.js"></script>
+{/block}
