@@ -81,7 +81,7 @@ final class Template_e6b1a6b223 extends Latte\Runtime\Template
                             <p>ID ini digenerate secara otomatis saat anda mendaftar.</p>
                         </div>
                         <div class="setting-control">
-                            <p class="plain-text">USER-12345</p>
+                            <p class="plain-text">1f19d51e-2ac1-4c22-b247-19c7f8bb9a9a</p>
                         </div>
                     </div>
                     <div class="setting-item">

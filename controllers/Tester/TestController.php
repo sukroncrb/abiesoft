@@ -12,9 +12,6 @@ class TestController extends Controller
 
     public function index($params)
     {
-        $cf = Cookies::lihat("_cf",);
-        print_r(Reader::secretCode($cf, Reader::env('SECRET_KEY')));
-        die();
         $formid = Generate::formID(__CLASS__."index");
         $this->view(
             model:"test",

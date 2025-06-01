@@ -27,7 +27,7 @@ formulir.addEventListener('submit', async (e) => {
     const token = document.querySelector('[data-token]').dataset.token;
     
     const formData = new FormData(formulir);
-    formData.append("fid", formulir.id);
+    formData.append("formid", formulir.id);
 
     try {
         const response = await fetch('http://127.0.0.1:8154/api/test', {

@@ -43,7 +43,8 @@
 
     {block modal}{/block}
     <div class="message-container"></div>
-    <div data-token="{$app['bearer']}"></div>
+    {block menu}{/block}
+    <div data-url="{$baseurl}" data-token="{$app['bearer']}"></div>
     <script src="{$baseurl}/assets/admin/js/style.js"></script>
     {block js}{/block}
 

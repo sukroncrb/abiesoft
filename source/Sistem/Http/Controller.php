@@ -119,12 +119,15 @@ class Controller {
 
     public function formguard() {
 
-        $idformulir = Input::get('fid');
+        $idformulir = Input::get('formid');
         $csrf = Input::get('csrf');
         $token = DB::terhubung()->query("SELECT token FROM token WHERE idformulir = ? ", [$idformulir])->teks();
         if($token != $csrf){
             die($this->result(403, "Token Expire"));
         }
+
+        Input::unset('formid');
+        Input::unset('csrf');
 
         return;
 

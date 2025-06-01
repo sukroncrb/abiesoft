@@ -182,6 +182,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 const token = document.querySelector('[data-token]').dataset.token;
+const baseurl = document.querySelector('[data-url]').dataset.url;
 
 function Toast(x) {
     const container = document.querySelector('.message-container');

@@ -26,6 +26,11 @@ admin:
       controller: EditorController
       function: index
       middleware: admin,user
+    /admin/users: 
+      method: get
+      controller: UsersController
+      function: index
+      middleware: admin,user
   
 
 
@@ -47,6 +52,10 @@ service:
     /api/test: 
       method: get,post
       controller: TestService
+      function: load
+    /api/users: 
+      method: get,post
+      controller: UsersService
       function: load
 
 

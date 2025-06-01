@@ -38,14 +38,14 @@ body {
     text-align: center;
 }
 
-.google-table {
+.table {
     width: 100%;
     border-collapse: collapse; /* Collapse borders for a clean look */
     /* No outer border on the table itself, relies on container shadow */
 }
 
 /* Table Header */
-.google-table thead th {
+.table thead th {
     background-color: #f8f9fa; /* Lighter background for header */
     color: #5f6368; /* Grey text for headers */
     font-size: 14px;
@@ -59,29 +59,29 @@ body {
 }
 
 /* Numeric columns in header should be right-aligned */
-.google-table thead th.numeric {
+.table thead th.numeric {
     text-align: right;
 }
 
 /* Table Body Rows */
-.google-table tbody tr {
+.table tbody tr {
     border-bottom: 1px solid #e8eaed; /* Subtle bottom border for rows */
     transition: background-color 0.2s ease-in-out; /* Smooth hover effect */
 }
 
 /* Remove bottom border from the last row */
-.google-table tbody tr:last-child {
+.table tbody tr:last-child {
     border-bottom: none;
 }
 
 /* Row hover effect */
-.google-table tbody tr:hover {
+.table tbody tr:hover {
     background-color: #e6f4ea; /* Light green for hover (or any subtle color) */
     cursor: pointer; /* Indicate interactivity */
 }
 
 /* Table Data Cells */
-.google-table tbody td {
+.table tbody td {
     padding: 12px 16px;
     font-size: 15px;
     color: #202124; /* Dark grey for content text */
@@ -89,7 +89,7 @@ body {
 }
 
 /* Numeric columns in body should be right-aligned */
-.google-table tbody td.numeric {
+.table tbody td.numeric {
     text-align: right;
     font-feature-settings: "tnum"; /* Tabular lining numbers for consistent width */
     font-variant-numeric: tabular-nums;
@@ -101,17 +101,17 @@ body {
         padding: 15px;
     }
 
-    .google-table thead {
+    .table thead {
         /* Hide header on small screens if you want a card-like list view */
         /* display: none; */
     }
 
-    .google-table, .google-table tbody, .google-table tr, .google-table td {
+    .table, .table tbody, .table tr, .table td {
         display: block; /* Stack table cells */
         width: 100%;
     }
 
-    .google-table tr {
+    .table tr {
         margin-bottom: 15px;
         border: 1px solid #e8eaed;
         border-radius: 8px;
@@ -119,13 +119,13 @@ body {
         background-color: #ffffff;
     }
 
-    .google-table td {
+    .table td {
         text-align: right !important; /* Force text to right for stacked cells */
         padding: 10px 15px;
         position: relative; /* For the data-title pseudo-element */
     }
 
-    .google-table td::before {
+    .table td::before {
         content: attr(data-label); /* Use data-label for the "header" on mobile */
         position: absolute;
         left: 15px;
@@ -136,7 +136,7 @@ body {
     }
 
     /* Adjust padding for numeric columns */
-    .google-table td.numeric::before {
+    .table td.numeric::before {
         text-align: left;
     }
 }

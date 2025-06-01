@@ -8,7 +8,7 @@ final class Template_5fb185da08 extends Latte\Runtime\Template
 	public const Source = '/home/sukroncrb2025/Sukron/abiesoft/templates/admin/main.latte';
 
 	public const Blocks = [
-		['css' => 'blockCss', 'title' => 'blockTitle', 'content' => 'blockContent', 'modal' => 'blockModal', 'js' => 'blockJs'],
+		['css' => 'blockCss', 'title' => 'blockTitle', 'content' => 'blockContent', 'modal' => 'blockModal', 'menu' => 'blockMenu', 'js' => 'blockJs'],
 	];
 
 
@@ -84,14 +84,18 @@ final class Template_5fb185da08 extends Latte\Runtime\Template
 ';
 		$this->renderBlock('modal', get_defined_vars()) /* line 44 */;
 		echo '    <div class="message-container"></div>
-    <div data-token="';
-		echo LR\Filters::escapeHtmlAttr($app['bearer']) /* line 46 */;
+';
+		$this->renderBlock('menu', get_defined_vars()) /* line 46 */;
+		echo '    <div data-url="';
+		echo LR\Filters::escapeHtmlAttr($baseurl) /* line 47 */;
+		echo '" data-token="';
+		echo LR\Filters::escapeHtmlAttr($app['bearer']) /* line 47 */;
 		echo '"></div>
     <script src="';
-		echo LR\Filters::escapeHtmlAttr(LR\Filters::safeUrl($baseurl)) /* line 47 */;
+		echo LR\Filters::escapeHtmlAttr(LR\Filters::safeUrl($baseurl)) /* line 48 */;
 		echo '/assets/admin/js/style.js"></script>
 ';
-		$this->renderBlock('js', get_defined_vars()) /* line 48 */;
+		$this->renderBlock('js', get_defined_vars()) /* line 49 */;
 		echo '
 </body>
 
@@ -123,7 +127,13 @@ final class Template_5fb185da08 extends Latte\Runtime\Template
 	}
 
 
-	/** {block js} on line 48 */
+	/** {block menu} on line 46 */
+	public function blockMenu(array $ʟ_args): void
+	{
+	}
+
+
+	/** {block js} on line 49 */
 	public function blockJs(array $ʟ_args): void
 	{
 	}

@@ -29,6 +29,11 @@ class Input {
         }
     }
 
+    public static function unset(string $item)
+    {
+        unset($_POST[$item]);
+    }
+
     public static function file(string $item, string $tipe): string
     {
         if (isset($_FILES[$item][$tipe])) {

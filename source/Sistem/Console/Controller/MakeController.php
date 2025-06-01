@@ -90,7 +90,7 @@ trait MakeController {
         fwrite($file, $isi);
         $isi = "            model:'".$model."',\n";
         fwrite($file, $isi);
-        $isi = "            template:'home/index',\n";
+        $isi = "            template:'".strtolower(str_replace("Controller","",$nama))."/index',\n";
         fwrite($file, $isi);
         $isi = "            data: [\n";
         fwrite($file, $isi);
